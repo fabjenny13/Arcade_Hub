@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Minesweeper.css";
+import Navbar from "../Components/Navbar";
 
 const SIZE = 8;
 const MINES = 10;
@@ -67,30 +68,33 @@ export default function Minesweeper() {
   };
 
   return (
-    <div className="minesweeper-page">
-      <h1 className="minesweeper-title">Minesweeper</h1>
+    <div className="page">
+      <Navbar />
+      <div className="minesweeper-page">
+        <h1 className="minesweeper-title">Minesweeper</h1>
 
-      <div
-        className="minesweeper-grid"
-        style={{ gridTemplateColumns: `repeat(${SIZE}, 36px)` }}
-      >
-        {board.map((row, r) =>
-          row.map((cell, c) => (
-            <button
-              key={`${r}-${c}`}
-              onClick={() => reveal(r, c)}
-              className={`cell ${cell.revealed ? "revealed" : ""}`}
-            >
-              {cell.revealed && (cell.mine ? "✕" : cell.count || "")}
-            </button>
-          )),
-        )}
+        <div
+          className="minesweeper-grid"
+          style={{ gridTemplateColumns: `repeat(${SIZE}, 36px)` }}
+        >
+          {board.map((row, r) =>
+            row.map((cell, c) => (
+              <button
+                key={`${r}-${c}`}
+                onClick={() => reveal(r, c)}
+                className={`cell ${cell.revealed ? "revealed" : ""}`}
+              >
+                {cell.revealed && (cell.mine ? "✕" : cell.count || "")}
+              </button>
+            )),
+          )}
+        </div>
+
+        {gameOver && <p>Game Over</p>}
+        <button className="reset-btn" onClick={reset}>
+          Reset
+        </button>
       </div>
-
-      {gameOver && <p>Game Over</p>}
-      <button className="reset-btn" onClick={reset}>
-        Reset
-      </button>
     </div>
   );
 }

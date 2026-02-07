@@ -1,0 +1,16 @@
+.navbar {
+  width: 100%;
+  height: 56px;
+  background-color: #cfe8ff; /* pastel blue */
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.nav-home {
+  text-decoration: none;
+  color: #1f3a5f;
+  font-weight: 500;
+  font-size: 16px;
+}
