@@ -5,6 +5,11 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       {/* HEADER */}
+      <div className="top-actions">
+        <button className="friends-btn">Friends</button>
+        <button className="login-btn">Login</button>
+      </div>
+
       <header>
         <div>
           <h1 className="dashboard-title">Arcade Hub</h1>

@@ -21,6 +21,42 @@ body,
   font-family: system-ui, sans-serif;
 }
 
+/* TOP RIGHT ACTIONS */
+.top-actions {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.top-actions button {
+  font-family: inherit;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #cddcff;
+  background: #7c90f6;
+  color: #ffffff;
+}
+
+.top-actions button:hover {
+  background-color: #677ff6;
+}
+
+/* FRIENDS BUTTON */
+.friends-btn {
+  background: #ffffff;
+}
+
+/* LOGIN BUTTON (slightly emphasized) */
+.login-btn {
+  background: #7c90f6;
+  color: white;
+  border-color: #7c90f6;
+}
+
 /* TITLE */
 .dashboard-title {
   font-weight: 600;
@@ -59,6 +95,7 @@ body,
 /* subtle interaction (no animation-heavy feel) */
 .game-card:hover {
   background: #f7faff;
+  border: 5px solid #7c90f6;
 }
 
 /* disabled */
