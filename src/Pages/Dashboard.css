@@ -31,7 +31,8 @@ body,
   align-items: center;
 }
 
-.top-actions button {
+.top-actions button,
+.top-actions a {
   font-family: inherit;
   padding: 8px 16px;
   border-radius: 999px;
@@ -40,9 +41,13 @@ body,
   border: 1px solid #cddcff;
   background: #7c90f6;
   color: #ffffff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
-.top-actions button:hover {
+.top-actions button:hover,
+.top-actions a:hover {
   background-color: #677ff6;
 }
 
@@ -75,8 +80,8 @@ body,
   background: #ffffff;
 }
 
-/* LOGIN BUTTON (slightly emphasized) */
-.login-btn {
+/* PROFILE BUTTON (slightly emphasized) */
+.profile-btn {
   background: #7c90f6;
   color: white;
   border-color: #7c90f6;

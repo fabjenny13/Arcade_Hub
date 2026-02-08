@@ -63,34 +63,10 @@ export default function Dashboard() {
     <div className="dashboard">
       {/* HEADER */}
       <div className="top-actions">
-        <button
-          className="friends-btn"
-          disabled={!currentUser}
-          title={
-            currentUser
-              ? "Invite friends to your next match"
-              : "Log in to invite friends"
-          }
-        >
-          {friendButtonLabel}
-        </button>
-        {currentUser ? (
-          <div className="user-actions">
-            <button
-              className="login-btn"
-              onClick={() => setIsAccountOpen(true)}
-            >
-              Account
-            </button>
-            <button className="ghost-btn" onClick={handleLogout}>
-              Log out
-            </button>
-          </div>
-        ) : (
-          <button className="login-btn" onClick={() => setIsAccountOpen(true)}>
-            Login
-          </button>
-        )}
+        <button className="friends-btn">Friends</button>
+        <Link to="/profile" className="profile-btn">
+          Profile
+        </Link>
       </div>
 
       <header>
