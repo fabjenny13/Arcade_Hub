@@ -85,19 +85,19 @@ export default function Dashboard() {
             <p>Logic • Deduction • Classic</p>
           </Link>
 
-          <div className="game-card disabled">
+          <div className="game-card">
             <img src="/images/pacman.png" alt="Pac-Man" />
             <h3>Pac-Man</h3>
             <p>Arcade • Navigation • Reflex</p>
           </div>
 
-          <div className="game-card disabled">
+          <div className="game-card">
             <img src="/images/snake.png" alt="Snake Game" />
             <h3>Snake</h3>
             <p>Reflex • Planning • Classic</p>
           </div>
 
-          <div className="game-card disabled">
+          <div className="game-card">
             <img src="/images/tictactoe.png" alt="Tic Tac Toe" />
             <h3>Tic-Tac-Toe</h3>
             <p>Strategy • Casual • Turn-Based</p>

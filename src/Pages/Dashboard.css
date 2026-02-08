@@ -10,7 +10,7 @@ body,
   width: 100vw;
 
   /* pastel blue background */
-  background: #f2f7ff;
+  background: #d1dff6;
   color: #24324a;
 
   display: flex;
@@ -143,12 +143,6 @@ body,
 .game-card:hover {
   background: #f7faff;
   border: 5px solid #7c90f6;
-}
-
-/* disabled */
-.game-card.disabled {
-  opacity: 0.45;
-  pointer-events: none;
 }
 
 .game-card img {
