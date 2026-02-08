@@ -28,6 +28,7 @@ body,
   right: 24px;
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .top-actions button {
@@ -43,6 +44,30 @@ body,
 
 .top-actions button:hover {
   background-color: #677ff6;
+}
+
+.top-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: #e3e9f8;
+  border-color: #d5def4;
+  color: #7a88a8;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ghost-btn {
+  background: #ffffff;
+  color: #51618a;
+  border: 1px solid #cddcff;
+}
+
+.ghost-btn:hover {
+  background: #eef3ff;
 }
 
 /* FRIENDS BUTTON */
@@ -61,6 +86,23 @@ body,
 .dashboard-title {
   font-weight: 600;
   color: #7c90f6;
+}
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef3ff;
+  color: #3d4c75;
+  padding: 8px 14px;
+  border-radius: 999px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+.user-badge.muted {
+  background: #f2f4f9;
+  color: #6b7895;
 }
 
 /* GRID */
