@@ -1,7 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import "./Profile.css";
 
 export default function Profile() {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <div className="page profile-page">
       <Navbar />
@@ -11,7 +17,9 @@ export default function Profile() {
             <p className="profile-label">Username</p>
             <h1 className="profile-name">PlayerOne</h1>
           </div>
-          <button className="profile-logout">Logout</button>
+          <button className="profile-logout" onClick={handleLogout}>
+            Logout
+          </button>
         </section>
 
         <section className="profile-card">
