@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flappy Bird Deluxe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-ui">
+  <button id="themeBtn">🌙</button>
+  <button id="musicBtn">🔊</button>
+
+  <select id="difficulty">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+
+  <div class="scoreboard">
+    Score: <span id="score">0</span> |
+    Best: <span id="best">0</span>
+  </div>
+</div>
+
+<canvas id="game"></canvas>
+
+<div class="overlay" id="overlay">
+  <h1>Flappy Bird</h1>
+  <p>Press SPACE to start</p>
+</div>
+
+<audio id="bgMusic" loop src="bg-music.mp3"></audio>
+<audio id="crashSound" src="crash.mp3"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>

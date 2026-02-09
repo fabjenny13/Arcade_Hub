@@ -28,6 +28,7 @@ body,
   right: 24px;
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .top-actions button {
@@ -43,6 +44,28 @@ body,
 
 .top-actions button:hover {
   background-color: #677ff6;
+}
+
+/* USER SECTION */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.username {
+  color: #7c90f6;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.logout-btn {
+  background: #ff6b6b !important;
+  border-color: #ff6b6b !important;
+}
+
+.logout-btn:hover {
+  background: #ee5a52 !important;
 }
 
 /* FRIENDS BUTTON */

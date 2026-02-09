@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Dashboard.css";
 
 export default function Dashboard() {
+  const { user, logout, isAuthenticated } = useAuth();
+
   return (
     <div className="dashboard">
       {/* HEADER */}
       <div className="top-actions">
         <button className="friends-btn">Friends</button>
-        <button className="login-btn">Login</button>
+        {isAuthenticated ? (
+          <div className="user-section">
+            <span className="username">Hello, {user.username}!</span>
+            <button className="logout-btn" onClick={logout}>Logout</button>
+          </div>
+        ) : (
+          <Link to="/login">
+            <button className="login-btn">Login</button>
+          </Link>
+        )}
       </div>
 
       <header>
@@ -26,11 +38,17 @@ export default function Dashboard() {
             <p>Logic • Deduction • Classic</p>
           </Link>
 
-          <div className="game-card disabled">
+          <Link to="/pacman" className="game-card">
             <img src="/images/pacman.png" alt="Pac-Man" />
             <h3>Pac-Man</h3>
             <p>Arcade • Navigation • Reflex</p>
-          </div>
+          </Link>
+
+          <Link to="/flappybird" className="game-card">
+            <img src="/images/flappybird.png" alt="Flappy Bird" />
+            <h3>Flappy Bird</h3>
+            <p>Arcade • Timing • Challenge</p>
+          </Link>
 
           <div className="game-card disabled">
             <img src="/images/snake.png" alt="Snake Game" />
