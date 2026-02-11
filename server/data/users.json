@@ -1,0 +1,29 @@
+[
+  {
+    "id": "b4a2a552-7536-4996-9b5a-fda72e7380ba",
+    "username": "feeeb",
+    "passwordHash": "1369d5e662aabc533fd75c0c2746ea93:a5685d51b080d56d1da030bc0180334670c0b1d7cf18397613b01bdd94cd3aaaf05a2047de8ae6569a489c25925dea02868c8a8232274e65fcdcde42fe5e89c9",
+    "friends": []
+  },
+  {
+    "id": "1c844a31-0a01-4a50-81e1-d5516cbbf49e",
+    "username": "fabussin",
+    "passwordHash": "cb45afa4e36a16352d94a278bf01237b:35aa26b3792123d245bb805e6dd63664e0d7e0d399b66029dbc095096d7d9d725fb3d76ccb5509df9160fa21844c408bc301089a0ccc1bd421d3254bfa4e994c",
+    "friends": [
+      "lumacheen",
+      "shawty"
+    ]
+  },
+  {
+    "id": "0cb5abaf-9268-464c-9385-fc446c22dfaf",
+    "username": "shawty",
+    "passwordHash": "35694c2709e34eb14da2e348a0511678:8e4ff3fdc19708551816249a7c828d40d1dddab4643c0e65b97418f8db7afdf54e591676659460e01e78b9f36bb51b009ab5bda0a54eecd620ab086fb05cb618",
+    "friends": []
+  },
+  {
+    "id": "cfc63284-987b-48e2-9587-38e9a72d643e",
+    "username": "lumacheen",
+    "passwordHash": "e332563904f91c2023afb87d4d8ea688:42db07a0e1f813737421e35c9ce6801136ef303c1f56b6375547ba18285a2eb6e62d6823e158a3198a7cb35489bb284484e5353705d9c719ff335811e8a33621",
+    "friends": []
+  }
+]

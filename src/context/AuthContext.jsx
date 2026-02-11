@@ -1,86 +1,108 @@
-import { createContext, useContext, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const AuthContext = createContext();
 
-const USERS_KEY = "arcadeHub.users";
-const CURRENT_USER_KEY = "arcadeHub.currentUser";
+async function apiRequest(path, options = {}) {
+  const response = await fetch(path, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  const hasJson = response.headers.get("content-type")?.includes("application/json");
+  const payload = hasJson ? await response.json() : null;
+
+  if (!response.ok) {
+    throw new Error(payload?.message || "Request failed");
+  }
+
+  return payload;
+}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem(CURRENT_USER_KEY)),
-  );
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  const getUsers = () => JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+  useEffect(() => {
+    let isMounted = true;
 
-  const login = (username, password) => {
-    const users = getUsers();
-    const foundUser = users.find(
-      (u) => u.username === username && u.password === password,
-    );
-
-    if (!foundUser) return false;
-
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(foundUser));
-    setUser(foundUser);
-    return true;
-  };
-
-  const signup = (username, password) => {
-    const users = getUsers();
-
-    if (users.some((u) => u.username === username)) {
-      return { success: false, message: "Username already exists" };
-    }
-
-    const newUser = {
-      username,
-      password,
-      friends: [],
+    const loadSession = async () => {
+      try {
+        const data = await apiRequest("/api/auth/me", { method: "GET" });
+        if (isMounted) {
+          setUser(data.user);
+        }
+      } catch {
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setAuthLoading(false);
+        }
+      }
     };
-    users.push(newUser);
 
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
-    setUser(newUser);
+    loadSession();
 
-    return { success: true };
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const login = async (username, password) => {
+    const data = await apiRequest("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+    });
+
+    setUser(data.user);
+    return data.user;
   };
 
-  const logout = () => {
-    localStorage.removeItem(CURRENT_USER_KEY);
+  const signup = async (username, password) => {
+    const data = await apiRequest("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+    });
+
+    setUser(data.user);
+    return data.user;
+  };
+
+  const logout = async () => {
+    await apiRequest("/api/auth/logout", { method: "POST" });
     setUser(null);
   };
 
-  const updateUsers = (users) => {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  const fetchUsers = async (search = "") => {
+    const data = await apiRequest(`/api/users?search=${encodeURIComponent(search)}`, {
+      method: "GET",
+    });
+
+    return data.users;
   };
 
-  const addFriend = (friendUsername) => {
-    const users = getUsers();
+  const addFriend = async (friendUsername) => {
+    const data = await apiRequest("/api/friends", {
+      method: "POST",
+      body: JSON.stringify({ friendUsername }),
+    });
 
-    const currentUser = users.find((u) => u.username === user.username);
-    const friendUser = users.find((u) => u.username === friendUsername);
-
-    if (!friendUser || friendUsername === user.username) return false;
-
-    currentUser.friends = currentUser.friends || [];
-
-    if (currentUser.friends.includes(friendUsername)) return false;
-
-    currentUser.friends.push(friendUsername);
-
-    updateUsers(users);
-    setUser({ ...currentUser });
-    localStorage.setItem("arcadeHub.currentUser", JSON.stringify(currentUser));
-
-    return true;
+    setUser(data.user);
+    return data.user;
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, signup, logout, addFriend }}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({ user, authLoading, login, signup, logout, addFriend, fetchUsers }),
+    [user, authLoading],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

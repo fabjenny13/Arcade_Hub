@@ -1,16 +1,24 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import "./Profile.css";
 import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, authLoading, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
   };
+
+  if (!authLoading && !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="page profile-page">

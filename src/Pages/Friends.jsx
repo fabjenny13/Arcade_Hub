@@ -1,24 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Friends.css";
 
 export default function Friends() {
-  const { user, addFriend } = useAuth();
+  const { user, authLoading, addFriend, fetchUsers } = useAuth();
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [users, setUsers] = useState([]);
 
-  const users = JSON.parse(localStorage.getItem("arcadeHub.users")) || [];
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
 
-  const filteredUsers = users.filter(
-    (u) =>
-      u.username.toLowerCase().includes(search.toLowerCase()) &&
-      u.username !== user.username,
-  );
+    const fetchAllUsers = async () => {
+      try {
+        const results = await fetchUsers(search);
+        setUsers(results);
+      } catch (error) {
+        setMessage(error.message);
+      }
+    };
 
-  const handleAdd = (username) => {
-    const success = addFriend(username);
-    setMessage(success ? "Friend added!" : "Unable to add friend");
+    fetchAllUsers();
+  }, [search, user, fetchUsers]);
+
+  if (!authLoading && !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleAdd = async (username) => {
+    try {
+      await addFriend(username);
+      setMessage("Friend added!");
+      const refreshedUsers = await fetchUsers(search);
+      setUsers(refreshedUsers);
+    } catch (error) {
+      setMessage(error.message);
+    }
   };
 
   return (
@@ -38,17 +59,22 @@ export default function Friends() {
           {message && <p className="info">{message}</p>}
 
           <div className="users-list">
-            {filteredUsers.map((u) => (
+            {users.map((u) => (
               <div key={u.username} className="user-row">
                 <span>{u.username}</span>
-                <button onClick={() => handleAdd(u.username)}>Add</button>
+                <button
+                  disabled={u.isFriend}
+                  onClick={() => handleAdd(u.username)}
+                >
+                  {u.isFriend ? "Added" : "Add"}
+                </button>
               </div>
             ))}
           </div>
 
           <h2>Your Friends</h2>
           <ul className="friends-list">
-            {(user.friends || []).map((f) => (
+            {(user?.friends || []).map((f) => (
               <li key={f}>{f}</li>
             ))}
           </ul>

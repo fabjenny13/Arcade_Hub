@@ -9,11 +9,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSignup, setIsSignup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const { login, signup } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -22,20 +23,20 @@ export default function Login() {
       return;
     }
 
-    if (isSignup) {
-      const result = signup(username, password);
-      if (!result.success) {
-        setError(result.message);
-        return;
+    setIsSubmitting(true);
+
+    try {
+      if (isSignup) {
+        await signup(username, password);
+      } else {
+        await login(username, password);
       }
+
       navigate("/profile");
-    } else {
-      const success = login(username, password);
-      if (!success) {
-        setError("Invalid username or password");
-        return;
-      }
-      navigate("/profile");
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -65,7 +66,9 @@ export default function Login() {
 
             {error && <p className="error-message">{error}</p>}
 
-            <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Please wait..." : isSignup ? "Sign Up" : "Login"}
+            </button>
           </form>
 
           <p className="toggle-auth">
