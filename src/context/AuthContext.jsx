@@ -32,7 +32,11 @@ export function AuthProvider({ children }) {
       return { success: false, message: "Username already exists" };
     }
 
-    const newUser = { username, password };
+    const newUser = {
+      username,
+      password,
+      friends: [],
+    };
     users.push(newUser);
 
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
@@ -47,8 +51,33 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const updateUsers = (users) => {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  };
+
+  const addFriend = (friendUsername) => {
+    const users = getUsers();
+
+    const currentUser = users.find((u) => u.username === user.username);
+    const friendUser = users.find((u) => u.username === friendUsername);
+
+    if (!friendUser || friendUsername === user.username) return false;
+
+    currentUser.friends = currentUser.friends || [];
+
+    if (currentUser.friends.includes(friendUsername)) return false;
+
+    currentUser.friends.push(friendUsername);
+
+    updateUsers(users);
+    setUser({ ...currentUser });
+    localStorage.setItem("arcadeHub.currentUser", JSON.stringify(currentUser));
+
+    return true;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, addFriend }}>
       {children}
     </AuthContext.Provider>
   );

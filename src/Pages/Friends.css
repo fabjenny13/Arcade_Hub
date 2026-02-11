@@ -1,0 +1,120 @@
+/* Page wrapper */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #eaf6ff, #f7fbff);
+}
+
+/* Centered container */
+.friends-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */
+.friends-box {
+  width: 380px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(173, 216, 230, 0.35);
+  color: #2c3e50;
+}
+
+/* Titles */
+.friends-box h1 {
+  text-align: center;
+  margin-bottom: 8px;
+  color: #3a7ca5;
+}
+
+.friends-box h2 {
+  margin-top: 24px;
+  font-size: 17px;
+  color: #4a90c2;
+}
+
+/* Search input */
+.friends-box input {
+  width: 100%;
+  padding: 11px;
+  margin-top: 14px;
+  border-radius: 10px;
+  border: 1px solid #cfe9f7;
+  outline: none;
+  font-size: 14px;
+  background: #f4fbff;
+  color: #2c3e50;
+}
+
+.friends-box input::placeholder {
+  color: #9bbfd6;
+}
+
+.friends-box input:focus {
+  border-color: #7bbce6;
+  background: #ffffff;
+}
+
+/* Info text */
+.info {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6aaed6;
+}
+
+/* Users list */
+.users-list {
+  margin-top: 14px;
+  max-height: 170px;
+  overflow-y: auto;
+}
+
+/* Each user row */
+.user-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+/* Username */
+.user-row span {
+  color: #355f7a;
+  font-size: 14px;
+}
+
+/* Buttons */
+.user-row button {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #cfe9f7;
+  color: #2c5d7c;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.user-row button:hover {
+  background: #b6def5;
+  transform: translateY(-1px);
+}
+
+/* Friends list */
+.friends-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.friends-list li {
+  padding: 7px 0;
+  font-size: 14px;
+  color: #355f7a;
+  border-bottom: 1px solid #e6f3fb;
+}

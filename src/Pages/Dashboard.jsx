@@ -60,10 +60,12 @@ export default function Dashboard() {
     <div className="dashboard">
       {/* HEADER */}
       <div className="top-actions">
-        <button className="friends-btn">Friends</button>
-        {/* <Link to="/profile" className="profile-btn">
-          Profile
-        </Link> */}
+        <button
+          className="friends-btn"
+          onClick={() => (user ? navigate("/friends") : navigate("/login"))}
+        >
+          Friends
+        </button>
 
         {user ? (
           <div className="user-section">

@@ -5,6 +5,7 @@ import Profile from "./Pages/Profile";
 import Pacman from "./Pacman/Pacman";
 import Login from "./Pages/Login";
 import FlappyBird from "./FlappyBird/FlappyBird";
+import Friends from "./Pages/Friends";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/pacman" element={<Pacman />} />
       <Route path="/login" element={<Login />} />
       <Route path="/flappybird" element={<FlappyBird />} />
+      <Route path="/friends" element={<Friends />} />
     </Routes>
   );
 }
