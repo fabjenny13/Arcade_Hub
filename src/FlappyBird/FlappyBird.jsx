@@ -1,0 +1,46 @@
+import { useEffect } from "react";
+import Navbar from "../Components/Navbar";
+import "./style.css";
+
+export default function FlappyBird() {
+  useEffect(() => {
+    if (document.getElementById("flappy-script")) return;
+
+    const script = document.createElement("script");
+    script.id = "flappy-script";
+    script.src = "/src/FlappyBird/script.js";
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
+
+  return (
+    <div className="flappy-bird-page">
+      <Navbar />
+
+      <div className="top-ui">
+        <button id="themeBtn">🌙</button>
+        <button id="musicBtn">🔊</button>
+
+        <audio id="bgMusic" loop src="./audio/bg-music.mp3"></audio>
+        <audio id="crashSound" src="./audio/crash.wav"></audio>
+
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <div className="scoreboard">
+          Score: <span id="score">0</span> | Best: <span id="best">0</span>
+        </div>
+      </div>
+
+      <canvas id="game"></canvas>
+
+      <div className="overlay" id="overlay">
+        <h1>Flappy Bird</h1>
+        <p>Press SPACE to start</p>
+      </div>
+    </div>
+  );
+}
