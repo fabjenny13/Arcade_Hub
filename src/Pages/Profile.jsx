@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import "./Profile.css";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
   const handleLogout = () => {
+    logout();
     navigate("/");
   };
 
@@ -14,8 +18,7 @@ export default function Profile() {
       <main className="profile-content">
         <section className="profile-card">
           <div>
-            <p className="profile-label">Username</p>
-            <h1 className="profile-name">PlayerOne</h1>
+            <h1 className="profile-name">{user.username}</h1>
           </div>
           <button className="profile-logout" onClick={handleLogout}>
             Logout

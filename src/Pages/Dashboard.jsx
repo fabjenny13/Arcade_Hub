@@ -68,8 +68,11 @@ export default function Dashboard() {
         {isAuthenticated ? (
           <div className="user-section">
             <span className="username">Hello, {user.username}!</span>
-            <button className="logout-btn" onClick={logout}>
-              Logout
+            <button
+              className="profile-btn"
+              onClick={() => navigate("/profile")}
+            >
+              Profile
             </button>
           </div>
         ) : (

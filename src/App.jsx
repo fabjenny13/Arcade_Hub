@@ -3,7 +3,7 @@ import Dashboard from "./Pages/Dashboard";
 import Minesweeper from "./Minesweeper/Minesweeper";
 import Profile from "./Pages/Profile";
 import Pacman from "./Pacman/Pacman";
-import Login from "./Login/Login";
+import Login from "./Pages/Login";
 import FlappyBird from "./FlappyBird/FlappyBird";
 
 function App() {

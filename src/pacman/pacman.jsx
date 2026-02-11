@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Pacman.css";
+import Navbar from "../Components/Navbar";
 
 // Game board: 0=empty, 1=wall, 2=pellet
 const createInitialBoard = () => [
@@ -96,40 +97,44 @@ export default function Pacman() {
   };
 
   return (
-    <div className="game-container">
-      <div className="game-header">
-        <div className="score-board">
-          <div className="score">Score: {score}</div>
-          <div className="high-score">Best: {highScore}</div>
+    <div className="page">
+      <Navbar />
+
+      <div className="game-container">
+        <div className="game-header">
+          <div className="score-board">
+            <div className="score">Score: {score}</div>
+            <div className="high-score">Best: {highScore}</div>
+          </div>
+
+          {gameState === "won" && (
+            <div className="message won">
+              You Win!
+              <button onClick={resetGame}>New Game</button>
+            </div>
+          )}
         </div>
 
-        {gameState === "won" && (
-          <div className="message won">
-            You Win!
-            <button onClick={resetGame}>New Game</button>
-          </div>
-        )}
-      </div>
+        <div className="board">
+          {grid.map((row, i) =>
+            row.map((cell, j) => {
+              let className = "cell";
 
-      <div className="board">
-        {grid.map((row, i) =>
-          row.map((cell, j) => {
-            let className = "cell";
+              if (cell === 1) className += " wall";
+              if (cell === 2) className += " pellet";
 
-            if (cell === 1) className += " wall";
-            if (cell === 2) className += " pellet";
+              if (player.row === i && player.col === j) {
+                className += ` pacman pacman-${player.direction}`;
+              }
 
-            if (player.row === i && player.col === j) {
-              className += ` pacman pacman-${player.direction}`;
-            }
+              return <div key={`${i}-${j}`} className={className} />;
+            }),
+          )}
+        </div>
 
-            return <div key={`${i}-${j}`} className={className} />;
-          }),
-        )}
-      </div>
-
-      <div className="controls">
-        <p>Use arrow keys to move</p>
+        <div className="controls">
+          <p>Use arrow keys to move</p>
+        </div>
       </div>
     </div>
   );
