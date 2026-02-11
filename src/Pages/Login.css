@@ -11,6 +11,7 @@
   align-items: center;
   min-height: 100vh;
   background: #f2f7ff;
+  color: black;
 }
 
 .login-box {
@@ -88,4 +89,13 @@
   font-size: 0.85em;
   margin: 0;
   text-align: center;
+}
+
+.toggle-auth span {
+  color: #00bfff;
+  cursor: pointer;
+}
+
+.toggle-auth span:hover {
+  text-decoration: underline;
 }

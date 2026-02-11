@@ -22,7 +22,7 @@ import "./Dashboard.css";
 // };
 
 export default function Dashboard() {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   // const [accounts, setAccounts] = useState([]);
@@ -65,7 +65,7 @@ export default function Dashboard() {
           Profile
         </Link> */}
 
-        {isAuthenticated ? (
+        {user ? (
           <div className="user-section">
             <span className="username">Hello, {user.username}!</span>
             <button

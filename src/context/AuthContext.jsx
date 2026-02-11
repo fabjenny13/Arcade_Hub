@@ -1,51 +1,57 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from "react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
+
+const USERS_KEY = "arcadeHub.users";
+const CURRENT_USER_KEY = "arcadeHub.currentUser";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem(CURRENT_USER_KEY)),
+  );
 
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('arcadeUser');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
+  const getUsers = () => JSON.parse(localStorage.getItem(USERS_KEY)) || [];
 
   const login = (username, password) => {
-    // Simple validation - in a real app, this would be an API call
-    if (username && password) {
-      const userData = { username };
-      setUser(userData);
-      localStorage.setItem('arcadeUser', JSON.stringify(userData));
-      return true;
+    const users = getUsers();
+    const foundUser = users.find(
+      (u) => u.username === username && u.password === password,
+    );
+
+    if (!foundUser) return false;
+
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(foundUser));
+    setUser(foundUser);
+    return true;
+  };
+
+  const signup = (username, password) => {
+    const users = getUsers();
+
+    if (users.some((u) => u.username === username)) {
+      return { success: false, message: "Username already exists" };
     }
-    return false;
+
+    const newUser = { username, password };
+    users.push(newUser);
+
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
+    setUser(newUser);
+
+    return { success: true };
   };
 
   const logout = () => {
+    localStorage.removeItem(CURRENT_USER_KEY);
     setUser(null);
-    localStorage.removeItem('arcadeUser');
   };
 
-  const value = {
-    user,
-    login,
-    logout,
-    isAuthenticated: !!user,
-    loading
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-}
+export const useAuth = () => useContext(AuthContext);

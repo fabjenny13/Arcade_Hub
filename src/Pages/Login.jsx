@@ -8,17 +8,34 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSignup, setIsSignup] = useState(false);
+
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
-    if (login(username, password)) {
-      navigate("/");
+    if (!username || !password) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    if (isSignup) {
+      const result = signup(username, password);
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
+      navigate("/profile");
     } else {
-      setError("Please enter both username and password");
+      const success = login(username, password);
+      if (!success) {
+        setError("Invalid username or password");
+        return;
+      }
+      navigate("/profile");
     }
   };
 
@@ -28,24 +45,35 @@ export default function Login() {
       <div className="login-container">
         <div className="login-box">
           <h1>Arcade Hub</h1>
+          <h3>{isSignup ? "Create Account" : "Login"}</h3>
+          <br></br>
+
           <form onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
             />
+
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
+
             {error && <p className="error-message">{error}</p>}
-            <button type="submit">Enter</button>
+
+            <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
           </form>
+
+          <p className="toggle-auth">
+            {isSignup ? "Already have an account?" : "New here?"}{" "}
+            <span onClick={() => setIsSignup(!isSignup)}>
+              {isSignup ? "Login" : "Create one"}
+            </span>
+          </p>
         </div>
       </div>
     </div>
