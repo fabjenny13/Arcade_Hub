@@ -1,13 +1,13 @@
 /* global process, Buffer */
-import http from "node:http";
+import http from "node:http"; //create server
 import fs from "node:fs/promises";
 import path from "node:path";
-import crypto from "node:crypto";
+import crypto from "node:crypto"; //for password hashing and session ID generation
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const USERS_FILE = path.join(__dirname, "data", "users.json");
+const USERS_FILE = path.join(__dirname, "data", "users.json"); //database
 
 const PORT = Number(process.env.PORT) || 4000;
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7;
@@ -28,7 +28,9 @@ async function writeUsers(users) {
 }
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
-  const hashed = crypto.pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("hex");
+  const hashed = crypto
+    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+    .toString("hex");
   return `${salt}:${hashed}`;
 }
 
@@ -38,8 +40,13 @@ function verifyPassword(password, stored) {
     return false;
   }
 
-  const candidate = crypto.pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("hex");
-  return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(candidate, "hex"));
+  const candidate = crypto
+    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+    .toString("hex");
+  return crypto.timingSafeEqual(
+    Buffer.from(hash, "hex"),
+    Buffer.from(candidate, "hex"),
+  );
 }
 
 function sanitizeUser(user) {
@@ -112,7 +119,10 @@ function getSession(req) {
 }
 
 function clearSessionCookie(res) {
-  res.setHeader("Set-Cookie", "arcade.sid=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0");
+  res.setHeader(
+    "Set-Cookie",
+    "arcade.sid=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0",
+  );
 }
 
 function setSessionCookie(res, sid) {
@@ -152,11 +162,15 @@ const server = http.createServer(async (req, res) => {
     const password = String(body.password || "");
 
     if (!username || !password) {
-      return sendJson(res, 400, { message: "Username and password are required" });
+      return sendJson(res, 400, {
+        message: "Username and password are required",
+      });
     }
 
     const users = await readUsers();
-    if (users.some((u) => u.username.toLowerCase() === username.toLowerCase())) {
+    if (
+      users.some((u) => u.username.toLowerCase() === username.toLowerCase())
+    ) {
       return sendJson(res, 409, { message: "Username already exists" });
     }
 
@@ -181,11 +195,15 @@ const server = http.createServer(async (req, res) => {
     const password = String(body.password || "");
 
     if (!username || !password) {
-      return sendJson(res, 400, { message: "Username and password are required" });
+      return sendJson(res, 400, {
+        message: "Username and password are required",
+      });
     }
 
     const users = await readUsers();
-    const user = users.find((u) => u.username.toLowerCase() === username.toLowerCase());
+    const user = users.find(
+      (u) => u.username.toLowerCase() === username.toLowerCase(),
+    );
 
     if (!user || !verifyPassword(password, user.passwordHash)) {
       return sendJson(res, 401, { message: "Invalid username or password" });

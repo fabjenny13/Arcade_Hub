@@ -1,4 +1,5 @@
 import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import "./Profile.css";
 import { useAuth } from "../context/AuthContext";
@@ -7,11 +8,40 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user, authLoading, logout } = useAuth();
 
+  const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+
   const handleLogout = async () => {
     await logout();
     navigate("/");
   };
 
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch("/api/users", {
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const data = await res.json();
+        setUsers(data.users || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingUsers(false);
+      }
+    }
+
+    fetchUsers();
+  }, [user]);
+
+  // Redirect if not logged in
   if (!authLoading && !user) {
     return <Navigate to="/login" replace />;
   }
@@ -23,7 +53,9 @@ export default function Profile() {
   return (
     <div className="page profile-page">
       <Navbar />
+
       <main className="profile-content">
+        {/* Profile card */}
         <section className="profile-card">
           <div>
             <h1 className="profile-name">{user.username}</h1>
@@ -33,28 +65,26 @@ export default function Profile() {
           </button>
         </section>
 
+        {/* Leaderboard */}
         <section className="profile-card">
           <div className="profile-card-header">
             <h2>Leaderboard</h2>
             <span className="profile-pill">Weekly</span>
           </div>
-          <ul className="leaderboard-list">
-            <li>
-              <span>1.</span>
-              <span>NovaRush</span>
-              <span>1,240 pts</span>
-            </li>
-            <li>
-              <span>2.</span>
-              <span>PixelAce</span>
-              <span>1,110 pts</span>
-            </li>
-            <li>
-              <span>3.</span>
-              <span>PlayerOne</span>
-              <span>980 pts</span>
-            </li>
-          </ul>
+
+          {loadingUsers ? (
+            <p>Loading leaderboard…</p>
+          ) : (
+            <ul className="leaderboard-list">
+              {users.map((u, index) => (
+                <li key={u.username}>
+                  <span>{index + 1}.</span>
+                  <span>{u.username}</span>
+                  <span>0 pts</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </main>
     </div>
