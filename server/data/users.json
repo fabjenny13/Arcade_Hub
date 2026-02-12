@@ -25,5 +25,11 @@
     "username": "lumacheen",
     "passwordHash": "e332563904f91c2023afb87d4d8ea688:42db07a0e1f813737421e35c9ce6801136ef303c1f56b6375547ba18285a2eb6e62d6823e158a3198a7cb35489bb284484e5353705d9c719ff335811e8a33621",
     "friends": []
+  },
+  {
+    "id": "60908efb-9574-48a6-9d92-3a624ace984e",
+    "username": "chin",
+    "passwordHash": "2aa64cb9dc175481421661f9d9d235ea:1d9e1641e03756ca090033d0dace2b49efe08e9b9031b5a0129e5fa52d39da173d7052a24215fffacfbbd48e760c75ca011350f650736cd7f00482f78737a48d",
+    "friends": []
   }
 ]
