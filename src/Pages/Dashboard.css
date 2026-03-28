@@ -200,11 +200,7 @@ header {
 
 /* ── Game Cards ─────────────────────────────────────────── */
 .game-card {
-  background: linear-gradient(
-    135deg,
-    var(--surface) 0%,
-    rgba(20, 28, 50, 0.9) 100%
-  );
+  background: linear-gradient(135deg, #466cd6 0%, #6a58a0 100%);
   border: 1px solid rgba(99, 140, 255, 0.25);
   border-radius: 16px;
   padding: 24px 20px 20px;
@@ -217,6 +213,7 @@ header {
   position: relative;
   overflow: hidden;
   text-decoration: none;
+  text-transform: uppercase;
 
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.35),
@@ -275,9 +272,7 @@ header {
 
 .game-card:hover {
   border-color: var(--border-glow);
-  background: var(--surface2);
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(99, 140, 255, 0.12);
 }
 
 .game-card:hover::before {
@@ -294,7 +289,6 @@ div.game-card:hover {
   transform: none;
   box-shadow: none;
   border-color: var(--border);
-  background: var(--surface);
 }
 
 div.game-card:hover::before {
