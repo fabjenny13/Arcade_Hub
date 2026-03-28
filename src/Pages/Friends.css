@@ -28,7 +28,6 @@
   border: 1px solid rgba(99, 140, 255, 0.15);
   color: #e2e8f8;
   position: relative;
-  overflow: hidden;
   animation: cardIn 0.4s ease both;
 }
 
@@ -109,7 +108,7 @@
   margin-top: 10px;
   font-size: 0.78rem;
   font-family: "JetBrains Mono", monospace;
-  color: #5a6a8a;
+  color: #889bc1;
   letter-spacing: 0.04em;
 }
 
@@ -190,6 +189,8 @@
   margin-top: 10px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  height: 200px;
   gap: 6px;
 }
 
@@ -202,4 +203,15 @@
   border-radius: 10px;
   border: 1px solid rgba(99, 140, 255, 0.1);
   letter-spacing: 0.03em;
+}
+
+.friends-list::-webkit-scrollbar {
+  width: 4px;
+}
+.friends-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.friends-list::-webkit-scrollbar-thumb {
+  background: rgba(99, 140, 255, 0.2);
+  border-radius: 4px;
 }
