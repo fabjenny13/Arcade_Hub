@@ -52,5 +52,15 @@
       "pacman": 160,
       "flappybird": 16
     }
+  },
+  {
+    "id": "0a3140da-0d99-4c1c-bd4f-5eddd8caee1d",
+    "username": "rico",
+    "passwordHash": "e768aa3f0cdaaebd3e56c359c83bbd0b:75841c4f056ccb0ce00e35fdc46699a968bbbd7e51b2c9899553323318f08ea685c119a9667cb77832c403d66d2d575f4f3408e70b60176db3d9ecd43e028eb1",
+    "friends": [],
+    "xp": 140,
+    "scores": {
+      "pacman": 700
+    }
   }
 ]

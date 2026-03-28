@@ -1,9 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
 /* Page wrapper */
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #eaf6ff, #f7fbff);
+  background: #080c18;
+  font-family: "Rajdhani", sans-serif;
+  color: #e2e8f8;
 }
 
 /* Centered container */
@@ -12,66 +16,122 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 40px 24px;
 }
 
 /* Card */
 .friends-box {
-  width: 380px;
-  background: #ffffff;
-  padding: 30px;
+  width: 420px;
+  background: #0e1425;
+  padding: 32px;
   border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(173, 216, 230, 0.35);
-  color: #2c3e50;
+  border: 1px solid rgba(99, 140, 255, 0.15);
+  color: #e2e8f8;
+  position: relative;
+  overflow: hidden;
+  animation: cardIn 0.4s ease both;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* top-edge accent line */
+.friends-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #638cff, transparent);
+  opacity: 0.6;
 }
 
 /* Titles */
 .friends-box h1 {
   text-align: center;
-  margin-bottom: 8px;
-  color: #3a7ca5;
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e2e8f8;
 }
 
 .friends-box h2 {
-  margin-top: 24px;
-  font-size: 17px;
-  color: #4a90c2;
+  margin: 24px 0 0;
+  font-size: 0.75rem;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5a6a8a;
 }
 
 /* Search input */
 .friends-box input {
   width: 100%;
-  padding: 11px;
-  margin-top: 14px;
+  padding: 11px 14px;
+  margin-top: 12px;
   border-radius: 10px;
-  border: 1px solid #cfe9f7;
+  border: 1px solid rgba(99, 140, 255, 0.2);
   outline: none;
-  font-size: 14px;
-  background: #f4fbff;
-  color: #2c3e50;
+  font-size: 0.9rem;
+  font-family: "JetBrains Mono", monospace;
+  background: #141c32;
+  color: #e2e8f8;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .friends-box input::placeholder {
-  color: #9bbfd6;
+  color: #5a6a8a;
 }
 
 .friends-box input:focus {
-  border-color: #7bbce6;
-  background: #ffffff;
+  border-color: rgba(99, 140, 255, 0.5);
+  background: #0e1425;
 }
 
 /* Info text */
 .info {
   text-align: center;
   margin-top: 10px;
-  font-size: 13px;
-  color: #6aaed6;
+  font-size: 0.78rem;
+  font-family: "JetBrains Mono", monospace;
+  color: #5a6a8a;
+  letter-spacing: 0.04em;
 }
 
 /* Users list */
 .users-list {
-  margin-top: 14px;
-  max-height: 170px;
+  margin-top: 12px;
+  max-height: 180px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.users-list::-webkit-scrollbar {
+  width: 4px;
+}
+.users-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.users-list::-webkit-scrollbar-thumb {
+  background: rgba(99, 140, 255, 0.2);
+  border-radius: 4px;
 }
 
 /* Each user row */
@@ -79,30 +139,48 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 10px 14px;
+  background: #141c32;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 140, 255, 0.1);
+  transition: border-color 0.2s;
+}
+
+.user-row:hover {
+  border-color: rgba(99, 140, 255, 0.3);
 }
 
 /* Username */
 .user-row span {
-  color: #355f7a;
-  font-size: 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  color: #e2e8f8;
+  letter-spacing: 0.03em;
 }
 
 /* Buttons */
 .user-row button {
   padding: 6px 14px;
-  border-radius: 999px;
-  border: none;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 140, 255, 0.35);
   cursor: pointer;
-  background: #cfe9f7;
-  color: #2c5d7c;
-  font-size: 13px;
-  transition: all 0.2s ease;
+  background: rgba(99, 140, 255, 0.1);
+  color: #638cff;
+  font-size: 0.72rem;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .user-row button:hover {
-  background: #b6def5;
-  transform: translateY(-1px);
+  background: rgba(99, 140, 255, 0.2);
+  border-color: rgba(99, 140, 255, 0.6);
+  box-shadow: 0 0 10px rgba(99, 140, 255, 0.15);
 }
 
 /* Friends list */
@@ -110,11 +188,18 @@
   list-style: none;
   padding: 0;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .friends-list li {
-  padding: 7px 0;
-  font-size: 14px;
-  color: #355f7a;
-  border-bottom: 1px solid #e6f3fb;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-family: "JetBrains Mono", monospace;
+  color: #e2e8f8;
+  background: #141c32;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 140, 255, 0.1);
+  letter-spacing: 0.03em;
 }
