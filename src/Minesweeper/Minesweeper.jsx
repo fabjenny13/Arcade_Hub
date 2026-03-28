@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Minesweeper.css";
 import Navbar from "../Components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 const SIZE = 8;
 const MINES = 10;
@@ -46,8 +47,10 @@ function generateBoard() {
 }
 
 export default function Minesweeper() {
+  const { user, reportScore } = useAuth();
   const [board, setBoard] = useState(generateBoard);
   const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
 
   const reveal = (r, c) => {
     if (gameOver || board[r][c].revealed) return;
@@ -57,6 +60,15 @@ export default function Minesweeper() {
 
     if (newBoard[r][c].mine) {
       setGameOver(true);
+    } else {
+      const points = 5;
+      setScore((prev) => prev + points);
+
+      if (user) {
+        reportScore("minesweeper", points).catch(() => {
+          console.error;
+        });
+      }
     }
 
     setBoard(newBoard);
@@ -65,6 +77,7 @@ export default function Minesweeper() {
   const reset = () => {
     setBoard(generateBoard());
     setGameOver(false);
+    setScore(0);
   };
 
   return (
@@ -72,6 +85,7 @@ export default function Minesweeper() {
       <Navbar />
       <div className="minesweeper-page">
         <h1 className="minesweeper-title">Minesweeper</h1>
+        <p>Score: {score}</p>
 
         <div
           className="minesweeper-grid"

@@ -97,8 +97,18 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  const reportScore = async (game, scoreDelta) => {
+    const data = await apiRequest("/api/scores", {
+      method: "POST",
+      body: JSON.stringify({ game, scoreDelta }),
+    });
+
+    setUser(data.user);
+    return data;
+  };
+
   const value = useMemo(
-    () => ({ user, authLoading, login, signup, logout, addFriend, fetchUsers }),
+    () => ({ user, authLoading, login, signup, logout, addFriend, fetchUsers, reportScore }),
     [user, authLoading],
   );
 

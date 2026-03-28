@@ -21,7 +21,7 @@ export default function Profile() {
 
     async function fetchUsers() {
       try {
-        const res = await fetch("/api/users", {
+        const res = await fetch("/api/leaderboard", {
           credentials: "include",
         });
 
@@ -65,6 +65,28 @@ export default function Profile() {
           </button>
         </section>
 
+        {/* Your game scores */}
+        <section className="profile-card">
+          <div className="profile-card-header">
+            <h2>Your Game Scores</h2>
+          </div>
+          <ul className="leaderboard-list">
+            {Object.entries(user.scores || {}).length ? (
+              Object.entries(user.scores || {}).map(([game, score]) => (
+                <li key={game}>
+                  <span>{game}</span>
+                  <span>{score} pts</span>
+                </li>
+              ))
+            ) : (
+              <li>
+                <span>No games played yet</span>
+                <span>0 pts</span>
+              </li>
+            )}
+          </ul>
+        </section>
+
         {/* Leaderboard */}
         <section className="profile-card">
           <div className="profile-card-header">
@@ -80,7 +102,7 @@ export default function Profile() {
                 <li key={u.username}>
                   <span>{index + 1}.</span>
                   <span>{u.username}</span>
-                  <span>0 pts</span>
+                  <span>{u.xp} XP</span>
                 </li>
               ))}
             </ul>

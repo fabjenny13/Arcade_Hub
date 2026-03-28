@@ -55,6 +55,25 @@ bestEl.textContent = best;
 let state = "IDLE"; // IDLE | PLAYING | GAME_OVER
 let musicOn = false;
 
+async function submitScore(scoreDelta) {
+  if (!window.arcadeAuth?.isLoggedIn) {
+    return;
+  }
+
+  try {
+    await fetch("/api/scores", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ game: "flappybird", scoreDelta }),
+    });
+  } catch {
+    console.error;
+  }
+}
+
 // 🎮 Controls
 window.addEventListener("keydown", (e) => {
   e.preventDefault();
@@ -167,8 +186,9 @@ function drawPipes() {
 
     if (!p.passed && p.x + 70 < bird.x) {
       p.passed = true;
-      score++;
+      score += 10;
       scoreEl.textContent = score;
+      submitScore(10);
     }
   });
 

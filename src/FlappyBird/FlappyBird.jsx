@@ -2,7 +2,17 @@ import { useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "./style.css";
 
+import { useAuth } from "../context/AuthContext";
+
 export default function FlappyBird() {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    window.arcadeAuth = {
+      isLoggedIn: Boolean(user),
+    };
+  }, [user]);
+
   useEffect(() => {
     if (document.getElementById("flappy-script")) return;
 

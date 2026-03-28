@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Pacman.css";
 import Navbar from "../Components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 // Game board: 0=empty, 1=wall, 2=pellet
 const createInitialBoard = () => [
@@ -18,6 +19,7 @@ const createInitialBoard = () => [
 ];
 
 export default function Pacman() {
+  const { user, reportScore } = useAuth();
   const [player, setPlayer] = useState({ row: 5, col: 6, direction: "right" });
   const [score, setScore] = useState(0);
   const [grid, setGrid] = useState(createInitialBoard());
@@ -76,10 +78,17 @@ export default function Pacman() {
 
       // Eat pellets
       if (grid[newRow][newCol] === 2) {
+        const points = 10;
         const newGrid = grid.map((r) => [...r]);
         newGrid[newRow][newCol] = 0;
         setGrid(newGrid);
-        setScore(score + 10);
+        setScore(score + points);
+
+        if (user) {
+          reportScore("pacman", points).catch(() => {
+            console.error;
+          });
+        }
       }
 
       setPlayer({ row: newRow, col: newCol, direction });
@@ -87,7 +96,7 @@ export default function Pacman() {
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [player, grid, score, gameState]);
+  }, [player, grid, score, gameState, user, reportScore]);
 
   const resetGame = () => {
     setPlayer({ row: 5, col: 6, direction: "right" });

@@ -17,7 +17,7 @@ async function readUsers() {
   try {
     const raw = await fs.readFile(USERS_FILE, "utf8");
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(normalizeUser) : [];
   } catch {
     return [];
   }
@@ -50,7 +50,32 @@ function verifyPassword(password, stored) {
 }
 
 function sanitizeUser(user) {
-  return { username: user.username, friends: user.friends || [] };
+  return {
+    username: user.username,
+    friends: user.friends || [],
+    xp: Number(user.xp) || 0,
+    scores: user.scores || {},
+  };
+}
+
+function normalizeUser(user) {
+  return {
+    ...user,
+    friends: Array.isArray(user.friends) ? user.friends : [],
+    xp: Number(user.xp) || 0,
+    scores:
+      user.scores && typeof user.scores === "object" && !Array.isArray(user.scores)
+        ? user.scores
+        : {},
+  };
+}
+
+function calculateXpGain(scoreDelta) {
+  if (!Number.isFinite(scoreDelta) || scoreDelta <= 0) {
+    return 0;
+  }
+
+  return Math.max(1, Math.ceil(scoreDelta * 0.2));
 }
 
 function parseCookies(header = "") {
@@ -179,6 +204,8 @@ const server = http.createServer(async (req, res) => {
       username,
       passwordHash: hashPassword(password),
       friends: [],
+      xp: 0,
+      scores: {},
     };
 
     users.push(user);
@@ -249,6 +276,65 @@ const server = http.createServer(async (req, res) => {
       }));
 
     return sendJson(res, 200, { users: filtered });
+  }
+
+
+  if (req.method === "GET" && url.pathname === "/api/leaderboard") {
+    const session = getSession(req);
+    if (!session) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    const users = await readUsers();
+    const leaderboard = users
+      .map(sanitizeUser)
+      .sort((a, b) => b.xp - a.xp || a.username.localeCompare(b.username));
+
+    return sendJson(res, 200, { users: leaderboard });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/scores") {
+    const session = getSession(req);
+    if (!session) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    const body = await readBody(req);
+    const game = String(body.game || "").trim().toLowerCase();
+    const scoreDelta = Number(body.scoreDelta);
+
+    if (!game) {
+      return sendJson(res, 400, { message: "Game is required" });
+    }
+
+    if (!Number.isFinite(scoreDelta) || scoreDelta <= 0) {
+      return sendJson(res, 400, { message: "scoreDelta must be a positive number" });
+    }
+
+    const users = await readUsers();
+    const currentUser = users.find((u) => u.id === session.userId);
+
+    if (!currentUser) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    currentUser.scores = currentUser.scores || {};
+    const currentScore = Number(currentUser.scores[game]) || 0;
+    const updatedScore = currentScore + scoreDelta;
+    currentUser.scores[game] = updatedScore;
+
+    const xpGain = calculateXpGain(scoreDelta);
+    currentUser.xp = (Number(currentUser.xp) || 0) + xpGain;
+
+    await writeUsers(users);
+
+    return sendJson(res, 200, {
+      user: sanitizeUser(currentUser),
+      game,
+      scoreDelta,
+      xpGain,
+      gameScore: updatedScore,
+    });
   }
 
   if (req.method === "POST" && url.pathname === "/api/friends") {
