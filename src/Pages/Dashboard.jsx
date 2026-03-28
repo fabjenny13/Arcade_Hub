@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      {/* HEADER */}
+      {/* ── Top actions ── */}
       <div className="top-actions">
         <button
           className="friends-btn"
@@ -20,7 +20,7 @@ export default function Dashboard() {
 
         {user ? (
           <div className="user-section">
-            <span className="username">Hello, {user.username}!</span>
+            <span className="username">Hello, {user.username}</span>
             <button
               className="profile-btn"
               onClick={() => navigate("/profile")}
@@ -35,15 +35,15 @@ export default function Dashboard() {
         )}
       </div>
 
+      {/* ── Header ── */}
       <header>
         <div className="dashboard-header">
           <h1 className="dashboard-title">Arcade Hub</h1>
           <p>A collection of simple, relaxing mini games</p>
-          <br></br>
         </div>
       </header>
 
-      {/* GAME GRID */}
+      {/* ── Game grid ── */}
       <section className="games-section">
         <div className="game-grid">
           <Link to="/minesweeper" className="game-card">
@@ -61,7 +61,7 @@ export default function Dashboard() {
           <Link to="/flappybird" className="game-card">
             <img src="/images/flappybird.png" alt="Flappy Bird" />
             <h3>Flappy Bird</h3>
-            <p>Strategy • Casual • Turn-Based</p>
+            <p>Reflex • Timing • Casual</p>
           </Link>
 
           <div className="game-card">
@@ -77,7 +77,7 @@ export default function Dashboard() {
           </div>
 
           <div className="game-card">
-            <img src="/images/tetris.png" alt="Tic Tac Toe" />
+            <img src="/images/tetris.png" alt="Tetris" />
             <h3>Tetris</h3>
             <p>Strategy • Casual • Turn-Based</p>
           </div>

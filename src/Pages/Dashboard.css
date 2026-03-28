@@ -1,179 +1,342 @@
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  font-family: "Press Start 2P", cursive;
-}
-
+/* ── Dashboard Shell ────────────────────────────────────── */
 .dashboard {
   min-height: 100vh;
-  width: 100vw;
-
-  /* pastel blue background */
-  background: #e4ecfa;
-  color: #24324a;
-
+  width: 100%;
+  background: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  color: white;
 }
 
-/* TOP RIGHT ACTIONS */
+/* ambient glow blobs */
+.dashboard::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(
+    ellipse,
+    rgba(99, 140, 255, 0.08) 0%,
+    transparent 70%
+  );
+  z-index: 0;
+}
+
+/* scanlines */
+.dashboard::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  z-index: 1000;
+}
+
+/* ── Top Actions ────────────────────────────────────────── */
 .top-actions {
   position: absolute;
-  top: 20px;
+  top: 16px;
   right: 24px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
+  z-index: 10;
 }
 
 .top-actions button,
 .top-actions a {
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 0.9rem;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
-  border: 1px solid #cddcff;
-  background: #7c90f6;
-  color: #ffffff;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-.top-actions button:hover,
-.top-actions a:hover {
-  background-color: #677ff6;
+/* ghost style (Friends) */
+.friends-btn {
+  background: transparent;
+  border: 1px solid var(--border-glow);
+  color: var(--accent);
+}
+
+.friends-btn:hover {
+  background: rgba(99, 140, 255, 0.08);
+  box-shadow: 0 0 12px rgba(99, 140, 255, 0.15);
+}
+
+/* filled style (Profile) */
+.profile-btn {
+  background: rgba(99, 140, 255, 0.15);
+  border: 1px solid rgba(99, 140, 255, 0.4);
+  color: var(--accent);
+}
+
+.profile-btn:hover {
+  background: rgba(99, 140, 255, 0.25);
+  box-shadow: 0 0 14px rgba(99, 140, 255, 0.2);
+}
+
+/* login */
+.login-btn {
+  background: rgba(99, 140, 255, 0.15);
+  border: 1px solid rgba(99, 140, 255, 0.4);
+  color: var(--accent);
+}
+
+.login-btn:hover {
+  background: rgba(99, 140, 255, 0.25);
+}
+
+/* logout */
+.logout-btn {
+  background: rgba(255, 107, 107, 0.1) !important;
+  border: 1px solid rgba(255, 107, 107, 0.35) !important;
+  color: var(--danger) !important;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.2) !important;
+  box-shadow: 0 0 12px rgba(255, 107, 107, 0.15) !important;
 }
 
 .top-actions button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
-  background: #e3e9f8;
-  border-color: #d5def4;
-  color: #7a88a8;
+  opacity: 0.4;
 }
 
-/* USER SECTION */
+/* ── User Section ───────────────────────────────────────── */
 .user-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .username {
-  color: #7c90f6;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
-.logout-btn {
-  background: #ff6b6b !important;
-  border-color: #ff6b6b !important;
-}
-
-.logout-btn:hover {
-  background: #ee5a52 !important;
-}
-
-.user-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.ghost-btn {
-  background: #ffffff;
-  color: #51618a;
-  border: 1px solid #cddcff;
-}
-
-.ghost-btn:hover {
-  background: #eef3ff;
-}
-
-/* FRIENDS BUTTON */
-.friends-btn {
-  background: #ffffff;
-}
-
-/* PROFILE BUTTON (slightly emphasized) */
-.profile-btn {
-  background: #7c90f6;
-  color: white;
-  border-color: #7c90f6;
-}
-
-/* TITLE */
-.dashboard-title {
-  font-weight: 600;
-  font-family: "Press Start 2P", cursive;
-  color: #7c90f6;
-  padding: 2px;
+/* ── Header ─────────────────────────────────────────────── */
+header {
+  position: relative;
+  z-index: 1;
+  margin-top: 100px;
+  margin-bottom: 48px;
+  text-align: center;
 }
 
 .dashboard-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.user-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #eef3ff;
-  color: #3d4c75;
-  padding: 8px 14px;
-  border-radius: 999px;
-  margin-top: 12px;
-  font-size: 0.9rem;
+.dashboard-title {
+  font-family: "Press Start 2P", cursive;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+  /* glowing gradient text */
+  background: linear-gradient(135deg, #638cff 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(99, 140, 255, 0.4));
 }
 
-.user-badge.muted {
-  background: #f2f4f9;
-  color: #6b7895;
+.dashboard-header p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-/* GRID */
+/* ── Games Section ──────────────────────────────────────── */
+.games-section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-bottom: 80px;
+}
+
+/* ── Game Grid ──────────────────────────────────────────── */
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 28px;
-
+  gap: 20px;
   width: 100%;
   max-width: 1000px;
+  margin: 0 auto;
   padding: 0 32px;
-}
-
-/* CARDS */
-.game-card {
-  border: 1px solid #dbe6ff;
-  padding: 28px 24px;
-  text-align: center;
-
-  color: #1f2f4f;
-  background: #ffffff;
-
-  border-radius: 18px;
   box-sizing: border-box;
 }
 
-/* subtle interaction (no animation-heavy feel) */
+/* ── Game Cards ─────────────────────────────────────────── */
+.game-card {
+  background: linear-gradient(
+    135deg,
+    var(--surface) 0%,
+    rgba(20, 28, 50, 0.9) 100%
+  );
+  border: 1px solid rgba(99, 140, 255, 0.25);
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+  text-align: center;
+  color: rgb(158, 158, 177);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(99, 140, 255, 0.15),
+    0 0 20px rgba(99, 140, 255, 0.08);
+
+  transition:
+    border-color 0.25s,
+    background 0.25s,
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+
+.game-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.game-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.game-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.game-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.game-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.game-card:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* top-edge glow line */
+.game-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
 .game-card:hover {
-  background: #f7faff;
-  border: 3px solid #7c90f6;
+  border-color: var(--border-glow);
+  background: var(--surface2);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(99, 140, 255, 0.12);
+}
+
+.game-card:hover::before {
+  opacity: 0.8;
+}
+
+/* disabled/coming-soon cards (divs, not links) */
+div.game-card {
+  cursor: default;
+  opacity: 0.5;
+}
+
+div.game-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+div.game-card:hover::before {
+  opacity: 0;
 }
 
 .game-card img {
   width: 100%;
   height: 120px;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 14px;
-  background: #eef3ff;
+  border-radius: 10px;
+  background: var(--surface2);
+}
+
+.game-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.game-card p {
+  margin: 0;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+/* coming soon badge on disabled cards */
+div.game-card::after {
+  content: "SOON";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 3px 7px;
+  border-radius: 4px;
 }
