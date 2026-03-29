@@ -54,10 +54,11 @@
       "rico",
       "shawty"
     ],
-    "xp": 48,
+    "xp": 76,
     "scores": {
       "pacman": 160,
-      "flappybird": 16
+      "flappybird": 106,
+      "minesweeper": 50
     }
   },
   {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import eatSoundFile from "../assets/eat.mp3";
 import gameOverSoundFile from "../assets/gameover.mp3";
+import Navbar from "../Components/Navbar.jsx";
 
 const GRID_SIZE = 20;
 
@@ -18,7 +19,7 @@ export default function Snake() {
   const [soundOn, setSoundOn] = useState(true); // 🔊 default ON
 
   const [highScore, setHighScore] = useState(
-    Number(localStorage.getItem("snakeHighScore")) || 0
+    Number(localStorage.getItem("snakeHighScore")) || 0,
   );
 
   const eatSound = new Audio(eatSoundFile);
@@ -28,52 +29,53 @@ export default function Snake() {
   useEffect(() => {
     if (gameOver || paused) return;
 
-    const interval = setInterval(() => {
-      setSnake((prevSnake) => {
-        const newHead = {
-          x: prevSnake[0].x + direction.x,
-          y: prevSnake[0].y + direction.y,
-        };
+    const interval = setInterval(
+      () => {
+        setSnake((prevSnake) => {
+          const newHead = {
+            x: prevSnake[0].x + direction.x,
+            y: prevSnake[0].y + direction.y,
+          };
 
-        // Wall collision
-        if (
-          newHead.x < 0 ||
-          newHead.y < 0 ||
-          newHead.x >= GRID_SIZE ||
-          newHead.y >= GRID_SIZE
-        ) {
-          setGameOver(true);
-          if (soundOn) gameOverSound.play();
-          return prevSnake;
-        }
+          // Wall collision
+          if (
+            newHead.x < 0 ||
+            newHead.y < 0 ||
+            newHead.x >= GRID_SIZE ||
+            newHead.y >= GRID_SIZE
+          ) {
+            setGameOver(true);
+            if (soundOn) gameOverSound.play();
+            return prevSnake;
+          }
 
-        // Self collision
-        if (
-          prevSnake.some(
-            (seg) => seg.x === newHead.x && seg.y === newHead.y
-          )
-        ) {
-          setGameOver(true);
-          if (soundOn) gameOverSound.play();
-          return prevSnake;
-        }
+          // Self collision
+          if (
+            prevSnake.some((seg) => seg.x === newHead.x && seg.y === newHead.y)
+          ) {
+            setGameOver(true);
+            if (soundOn) gameOverSound.play();
+            return prevSnake;
+          }
 
-        const newSnake = [newHead, ...prevSnake];
+          const newSnake = [newHead, ...prevSnake];
 
-        // Eat food
-        if (newHead.x === food.x && newHead.y === food.y) {
-          if (soundOn) eatSound.play();
-          setFood({
-            x: Math.floor(Math.random() * GRID_SIZE),
-            y: Math.floor(Math.random() * GRID_SIZE),
-          });
-        } else {
-          newSnake.pop();
-        }
+          // Eat food
+          if (newHead.x === food.x && newHead.y === food.y) {
+            if (soundOn) eatSound.play();
+            setFood({
+              x: Math.floor(Math.random() * GRID_SIZE),
+              y: Math.floor(Math.random() * GRID_SIZE),
+            });
+          } else {
+            newSnake.pop();
+          }
 
-        return newSnake;
-      });
-    }, Math.max(60, 150 - snake.length * 3));
+          return newSnake;
+        });
+      },
+      Math.max(60, 150 - snake.length * 3),
+    );
 
     return () => clearInterval(interval);
   }, [direction, food, gameOver, paused, snake.length, soundOn]);
@@ -122,12 +124,11 @@ export default function Snake() {
         background: "radial-gradient(circle at center, #0f172a, #020617)",
         minHeight: "100vh",
         color: "white",
-        paddingTop: "20px",
       }}
     >
-      <h1 style={{ color: "#4ade80", fontSize: "40px" }}>
-        🐍 Snake Game
-      </h1>
+      <Navbar />
+
+      <h1 style={{ color: "#4ade80", fontSize: "40px" }}>🐍 Snake Game</h1>
 
       <h2>Score: {snake.length - 1}</h2>
       <h3 style={{ opacity: 0.7 }}>High Score: {highScore}</h3>
@@ -191,9 +192,7 @@ export default function Snake() {
           const x = i % GRID_SIZE;
           const y = Math.floor(i / GRID_SIZE);
 
-          const isSnake = snake.some(
-            (seg) => seg.x === x && seg.y === y
-          );
+          const isSnake = snake.some((seg) => seg.x === x && seg.y === y);
           const isFood = food.x === x && food.y === y;
 
           return (
@@ -205,15 +204,15 @@ export default function Snake() {
                 backgroundColor: isSnake
                   ? "#4ade80"
                   : isFood
-                  ? "#fb7185"
-                  : "#020617",
+                    ? "#fb7185"
+                    : "#020617",
                 border: "1px solid #1e293b",
                 borderRadius: isSnake ? "4px" : "0px",
                 boxShadow: isSnake
                   ? "0 0 6px #4ade80"
                   : isFood
-                  ? "0 0 10px #fb7185"
-                  : "none",
+                    ? "0 0 10px #fb7185"
+                    : "none",
                 animation: isFood ? "pulse 1s infinite" : "none",
               }}
             />
