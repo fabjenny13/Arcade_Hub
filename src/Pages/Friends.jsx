@@ -5,15 +5,13 @@ import Navbar from "../Components/Navbar";
 import "./Friends.css";
 
 export default function Friends() {
-  const { user, authLoading, addFriend, fetchUsers } = useAuth();
+  const { user, authLoading, addFriend, removeFriend, fetchUsers } = useAuth();
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
     const fetchAllUsers = async () => {
       try {
@@ -31,12 +29,26 @@ export default function Friends() {
     return <Navigate to="/login" replace />;
   }
 
+  const refreshUsers = async () => {
+    const refreshedUsers = await fetchUsers(search);
+    setUsers(refreshedUsers);
+  };
+
   const handleAdd = async (username) => {
     try {
       await addFriend(username);
-      setMessage("Friend added!");
-      const refreshedUsers = await fetchUsers(search);
-      setUsers(refreshedUsers);
+      setMessage("Friend added");
+      await refreshUsers();
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
+  const handleRemove = async (username) => {
+    try {
+      await removeFriend(username);
+      setMessage("Friend removed");
+      await refreshUsers();
     } catch (error) {
       setMessage(error.message);
     }
@@ -62,20 +74,26 @@ export default function Friends() {
             {users.map((u) => (
               <div key={u.username} className="user-row">
                 <span>{u.username}</span>
-                <button
-                  disabled={u.isFriend}
-                  onClick={() => handleAdd(u.username)}
-                >
-                  {u.isFriend ? "Added" : "Add"}
-                </button>
+                {u.isFriend ? (
+                  <button className="danger-btn" onClick={() => handleRemove(u.username)}>
+                    Remove
+                  </button>
+                ) : (
+                  <button onClick={() => handleAdd(u.username)}>Add</button>
+                )}
               </div>
             ))}
           </div>
 
           <h2>Your Friends</h2>
           <ul className="friends-list">
-            {(user?.friends || []).map((f) => (
-              <li key={f}>{f}</li>
+            {(user?.friends || []).map((friend) => (
+              <li key={friend}>
+                <span>{friend}</span>
+                <button className="danger-btn" onClick={() => handleRemove(friend)}>
+                  Remove Friend
+                </button>
+              </li>
             ))}
           </ul>
         </div>

@@ -374,6 +374,40 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, { user: sanitizeUser(currentUser) });
   }
 
+  if (req.method === "DELETE" && url.pathname === "/api/friends") {
+    const session = getSession(req);
+    if (!session) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    const body = await readBody(req);
+    const friendUsername = String(body.friendUsername || "").trim();
+
+    if (!friendUsername) {
+      return sendJson(res, 400, { message: "Friend username is required" });
+    }
+
+    const users = await readUsers();
+    const currentUser = users.find((u) => u.id === session.userId);
+
+    if (!currentUser) {
+      return sendJson(res, 404, { message: "User not found" });
+    }
+
+    currentUser.friends = Array.isArray(currentUser.friends) ? currentUser.friends : [];
+
+    if (!currentUser.friends.includes(friendUsername)) {
+      return sendJson(res, 404, { message: "Friend not found" });
+    }
+
+    currentUser.friends = currentUser.friends.filter(
+      (friend) => friend !== friendUsername,
+    );
+    await writeUsers(users);
+
+    return sendJson(res, 200, { user: sanitizeUser(currentUser) });
+  }
+
   return sendJson(res, 404, { message: "Not found" });
 });
 

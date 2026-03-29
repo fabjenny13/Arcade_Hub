@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import eatSoundFile from "../assets/eat.mp3";
 import gameOverSoundFile from "../assets/gameover.mp3";
 import Navbar from "../Components/Navbar.jsx";
+import GameBoot from "../Components/GameBoot";
+import "../Components/GameBoot.css";
 
 const GRID_SIZE = 20;
 
@@ -11,6 +13,7 @@ const INITIAL_SNAKE = [
 ];
 
 export default function Snake() {
+  const [booting, setBooting] = useState(true);
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState({ x: 0, y: -1 });
   const [food, setFood] = useState({ x: 5, y: 5 });
@@ -22,12 +25,17 @@ export default function Snake() {
     Number(localStorage.getItem("snakeHighScore")) || 0,
   );
 
-  const eatSound = new Audio(eatSoundFile);
-  const gameOverSound = new Audio(gameOverSoundFile);
+  const eatSound = useMemo(() => new Audio(eatSoundFile), []);
+  const gameOverSound = useMemo(() => new Audio(gameOverSoundFile), []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setBooting(false), 650);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Movement loop
   useEffect(() => {
-    if (gameOver || paused) return;
+    if (booting || gameOver || paused) return;
 
     const interval = setInterval(
       () => {
@@ -71,6 +79,15 @@ export default function Snake() {
             newSnake.pop();
           }
 
+          const nextScore = newSnake.length - 1;
+          setHighScore((previous) => {
+            if (nextScore > previous) {
+              localStorage.setItem("snakeHighScore", nextScore);
+              return nextScore;
+            }
+            return previous;
+          });
+
           return newSnake;
         });
       },
@@ -78,10 +95,12 @@ export default function Snake() {
     );
 
     return () => clearInterval(interval);
-  }, [direction, food, gameOver, paused, snake.length, soundOn]);
+  }, [booting, direction, food, gameOver, paused, snake.length, soundOn, eatSound, gameOverSound]);
 
   // Controls
   useEffect(() => {
+    if (booting) return undefined;
+
     const handleKey = (e) => {
       setDirection((prev) => {
         if (e.key === "ArrowUp" && prev.y !== 1) return { x: 0, y: -1 };
@@ -94,15 +113,7 @@ export default function Snake() {
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, []);
-
-  // High score
-  useEffect(() => {
-    if (snake.length - 1 > highScore) {
-      setHighScore(snake.length - 1);
-      localStorage.setItem("snakeHighScore", snake.length - 1);
-    }
-  }, [snake, highScore]);
+  }, [booting]);
 
   // Food animation
   useEffect(() => {
@@ -116,6 +127,25 @@ export default function Snake() {
     `;
     document.head.appendChild(style);
   }, []);
+
+  if (booting) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          background: "radial-gradient(circle at center, #0f172a, #020617)",
+          minHeight: "100vh",
+          color: "white",
+        }}
+      >
+        <Navbar />
+        <GameBoot
+          title="Snake"
+          subtitle="Loading grid, food spawns, and speed logic..."
+        />
+      </div>
+    );
+  }
 
   return (
     <div

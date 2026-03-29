@@ -97,6 +97,16 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  const removeFriend = async (friendUsername) => {
+    const data = await apiRequest("/api/friends", {
+      method: "DELETE",
+      body: JSON.stringify({ friendUsername }),
+    });
+
+    setUser(data.user);
+    return data.user;
+  };
+
   const reportScore = async (game, scoreDelta) => {
     const data = await apiRequest("/api/scores", {
       method: "POST",
@@ -108,7 +118,17 @@ export function AuthProvider({ children }) {
   };
 
   const value = useMemo(
-    () => ({ user, authLoading, login, signup, logout, addFriend, fetchUsers, reportScore }),
+    () => ({
+      user,
+      authLoading,
+      login,
+      signup,
+      logout,
+      addFriend,
+      removeFriend,
+      fetchUsers,
+      reportScore,
+    }),
     [user, authLoading],
   );
 

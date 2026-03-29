@@ -1,19 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import "./style.css";
+import GameBoot from "../Components/GameBoot";
+import "../Components/GameBoot.css";
 
 import { useAuth } from "../context/AuthContext";
 
 export default function FlappyBird() {
   const { user } = useAuth();
+  const [booting, setBooting] = useState(true);
 
   useEffect(() => {
+    const timer = setTimeout(() => setBooting(false), 650);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (booting) return;
+
     window.arcadeAuth = {
       isLoggedIn: Boolean(user),
     };
-  }, [user]);
+  }, [booting, user]);
 
   useEffect(() => {
+    if (booting) return;
     if (document.getElementById("flappy-script")) return;
 
     const script = document.createElement("script");
@@ -21,7 +32,19 @@ export default function FlappyBird() {
     script.src = "/src/FlappyBird/script.js";
     script.defer = true;
     document.body.appendChild(script);
-  }, []);
+  }, [booting]);
+
+  if (booting) {
+    return (
+      <div className="flappy-bird-page">
+        <Navbar />
+        <GameBoot
+          title="Flappy Bird"
+          subtitle="Loading pipes, gravity, and timing controls..."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flappy-bird-page">
