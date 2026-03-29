@@ -64,11 +64,11 @@ export default function Dashboard() {
             <p>Reflex • Timing • Casual</p>
           </Link>
 
-          <div className="game-card">
+          <Link to="/snake" className="game-card">
             <img src="/images/snake.png" alt="Snake Game" />
             <h3>Snake</h3>
             <p>Reflex • Planning • Classic</p>
-          </div>
+          </Link>
 
           <div className="game-card">
             <img src="/images/tictactoe.png" alt="Tic Tac Toe" />
