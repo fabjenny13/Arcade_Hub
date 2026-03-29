@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Pacman.css";
+import "./pacman.css";
 import Navbar from "../Components/Navbar";
 import { useAuth } from "../context/AuthContext";
 

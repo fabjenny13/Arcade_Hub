@@ -70,17 +70,23 @@ export default function Dashboard() {
             <p>Reflex • Planning • Classic</p>
           </Link>
 
-          <div className="game-card">
+          <Link to="/tictactoe" className="game-card">
             <img src="/images/tictactoe.png" alt="Tic Tac Toe" />
             <h3>Tic-Tac-Toe</h3>
-            <p>Strategy • Casual • Turn-Based</p>
-          </div>
+            <p>Multiplayer • Invite Friends • Strategy</p>
+          </Link>
 
-          <div className="game-card">
-            <img src="/images/tetris.png" alt="Tetris" />
-            <h3>Tetris</h3>
-            <p>Strategy • Casual • Turn-Based</p>
-          </div>
+          <Link to="/simpleshooter" className="game-card">
+            <img src="/images/tetris.png" alt="Simple Shooting Duel" />
+            <h3>Simple Shooting Duel</h3>
+            <p>Multiplayer • Invite Friends • Action</p>
+          </Link>
+
+          <Link to="/connectfour" className="game-card">
+            <img src="/images/tictactoe.png" alt="Connect Four Rush" />
+            <h3>Connect Four Rush</h3>
+            <p>Multiplayer • Invite Friends • Strategy</p>
+          </Link>
         </div>
       </section>
     </div>

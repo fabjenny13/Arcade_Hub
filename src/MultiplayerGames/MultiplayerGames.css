@@ -1,0 +1,109 @@
+.multiplayer-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: radial-gradient(circle at top, #1c2b57, #0f1220 60%);
+  color: #f5f7ff;
+}
+
+.multiplayer-shell {
+  max-width: 840px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+
+.mode-selector {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.mode-buttons button,
+.invite-box button,
+.game-controls button {
+  border: none;
+  border-radius: 10px;
+  background: #26d0ff;
+  color: #0d1020;
+  font-weight: 700;
+  padding: 0.6rem 0.95rem;
+  cursor: pointer;
+}
+
+.invite-box {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.invite-box select {
+  border-radius: 8px;
+  border: 1px solid #7a88b6;
+  padding: 0.5rem;
+}
+
+.mode-hint {
+  color: #bdd0ff;
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(70px, 90px));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.ttt-cell {
+  height: 90px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+}
+
+.shooter-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.hp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+}
+
+.game-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.connect-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(7, 42px);
+  gap: 0.35rem;
+}
+
+.connect-cell {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.connect-cell.player {
+  background: #ffe45d;
+}
+
+.connect-cell.cpu {
+  background: #ff6b6b;
+}
