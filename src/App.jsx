@@ -8,6 +8,7 @@ import FlappyBird from "./FlappyBird/FlappyBird";
 import Friends from "./Pages/Friends";
 import Snake from "./Snake/Snake";
 import TicTacToe from "./TicTacToe/tictactoe";
+import PingPong from "./PingPong/pingpong";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/snake" element={<Snake />} />
       <Route path="/friends" element={<Friends />} />
       <Route path="/tictactoe" element={<TicTacToe />} />
+      <Route path="/pingpong" element={<PingPong />} />
     </Routes>
   );
 }

@@ -76,6 +76,12 @@ export default function Dashboard() {
             <p>Strategy • Casual • Turn-Based</p>
           </Link>
 
+          <Link to="/pingpong" className="game-card">
+            <img src="/images/pingpong.png" alt="Ping Pong" />
+            <h3>Ping Pong</h3>
+            <p>Strategy • Casual • Turn-Based</p>
+          </Link>
+
           <div className="game-card">
             <img src="/images/tetris.png" alt="Tetris" />
             <h3>Tetris</h3>
@@ -83,19 +89,13 @@ export default function Dashboard() {
           </div>
 
           <div className="game-card">
-            <img src="/images/tetris.png" alt="Tetris" />
-            <h3>Ping Pong</h3>
-            <p>Strategy • Casual • Turn-Based</p>
-          </div>
-
-          <div className="game-card">
-            <img src="/images/tetris.png" alt="Tetris" />
+            <img src="/images/tetris.png" alt="Shooter" />
             <h3>Shooter</h3>
             <p>Strategy • Casual • Turn-Based</p>
           </div>
 
           <div className="game-card">
-            <img src="/images/tetris.png" alt="Tetris" />
+            <img src="/images/tetris.png" alt="Game" />
             <h3>Game</h3>
             <p>Strategy • Casual • Turn-Based</p>
           </div>
