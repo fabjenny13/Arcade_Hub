@@ -7,6 +7,7 @@ import Login from "./Pages/Login";
 import FlappyBird from "./FlappyBird/FlappyBird";
 import Friends from "./Pages/Friends";
 import Snake from "./Snake/Snake";
+import TicTacToe from "./TicTacToe/tictactoe";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <Route path="/flappybird" element={<FlappyBird />} />
       <Route path="/snake" element={<Snake />} />
       <Route path="/friends" element={<Friends />} />
-      
+      <Route path="/tictactoe" element={<TicTacToe />} />
     </Routes>
   );
 }
