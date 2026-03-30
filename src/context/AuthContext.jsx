@@ -87,6 +87,14 @@ export function AuthProvider({ children }) {
     return data.users;
   };
 
+  const fetchUserProfile = async (username) => {
+    const data = await apiRequest(`/api/users/${encodeURIComponent(username)}`, {
+      method: "GET",
+    });
+
+    return data.user;
+  };
+
   const addFriend = async (friendUsername) => {
     const data = await apiRequest("/api/friends", {
       method: "POST",
@@ -108,7 +116,17 @@ export function AuthProvider({ children }) {
   };
 
   const value = useMemo(
-    () => ({ user, authLoading, login, signup, logout, addFriend, fetchUsers, reportScore }),
+    () => ({
+      user,
+      authLoading,
+      login,
+      signup,
+      logout,
+      addFriend,
+      fetchUsers,
+      fetchUserProfile,
+      reportScore,
+    }),
     [user, authLoading],
   );
 

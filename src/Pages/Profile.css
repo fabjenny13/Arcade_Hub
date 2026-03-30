@@ -144,6 +144,14 @@
   line-height: 1.1;
 }
 
+.profile-xp {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
 .profile-logout {
   border: 1px solid rgba(255, 107, 107, 0.35);
   background: rgba(255, 107, 107, 0.1);
@@ -166,6 +174,26 @@
   background: rgba(255, 107, 107, 0.2);
   border-color: rgba(255, 107, 107, 0.6);
   box-shadow: 0 0 14px rgba(255, 107, 107, 0.2);
+}
+
+.profile-back {
+  border: 1px solid rgba(99, 140, 255, 0.35);
+  background: rgba(99, 140, 255, 0.1);
+  color: var(--accent);
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.profile-back:hover {
+  background: rgba(99, 140, 255, 0.2);
+  border-color: rgba(99, 140, 255, 0.6);
 }
 
 /* ── Card Header ────────────────────────────────────────── */

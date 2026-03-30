@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Friends.css";
@@ -75,7 +75,10 @@ export default function Friends() {
           <h2>Your Friends</h2>
           <ul className="friends-list">
             {(user?.friends || []).map((f) => (
-              <li key={f}>{f}</li>
+              <li key={f}>
+                <span>{f}</span>
+                <Link to={`/profile/${encodeURIComponent(f)}`}>View Profile</Link>
+              </li>
             ))}
           </ul>
         </div>

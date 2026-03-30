@@ -13,6 +13,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:username" element={<Profile />} />
       <Route path="/minesweeper" element={<Minesweeper />} />
       <Route path="/pacman" element={<Pacman />} />
       <Route path="/login" element={<Login />} />

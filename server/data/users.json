@@ -70,5 +70,30 @@
     "scores": {
       "pacman": 700
     }
+  },
+  {
+    "id": "0af5e8f1-50d1-4dd5-96af-48b7ccb614d8",
+    "username": "amogus2",
+    "passwordHash": "9ece12c915a04dfcac720b4fb11d5f9b:78daf8e68b756ef632963cf59b93b01fcf67448f19abee5bcd2dd70216f675df5726e79b8ba27d2fdef9cf174a7285b4c203e2278752c55d013b5c7860b8921c",
+    "friends": [
+      "amogus"
+    ],
+    "xp": 151,
+    "scores": {
+      "pacman": 700,
+      "flappybird": 50,
+      "minesweeper": 5
+    }
+  },
+  {
+    "id": "e0e63c6a-e616-43ee-bdd8-74bcc12eb3a6",
+    "username": "amogus3",
+    "passwordHash": "fc331c0277f0e58e7359e09d54cbbccd:73f05bc43f7b02cfb1ff85bdd2fe6ca5c399fe049ebb2e0c7b58c0b5d2595b6b66aef93b692c9b1cf474d30b0845623b03d69a30700d841a3dad19277d66c6c6",
+    "friends": [
+      "amogus",
+      "amogus2"
+    ],
+    "xp": 0,
+    "scores": {}
   }
 ]
