@@ -9,6 +9,7 @@ import Friends from "./Pages/Friends";
 import Snake from "./Snake/Snake";
 import TicTacToe from "./TicTacToe/tictactoe";
 import PingPong from "./PingPong/pingpong";
+import Shooter from "./Shooter/Shooter";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path="/friends" element={<Friends />} />
       <Route path="/tictactoe" element={<TicTacToe />} />
       <Route path="/pingpong" element={<PingPong />} />
+      <Route path="/shooter" element={<Shooter />} />
     </Routes>
   );
 }

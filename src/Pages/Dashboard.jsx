@@ -88,11 +88,11 @@ export default function Dashboard() {
             <p>Strategy • Casual • Turn-Based</p>
           </div>
 
-          <div className="game-card">
+          <Link to="/shooter" className="game-card">
             <img src="/images/tetris.png" alt="Shooter" />
             <h3>Shooter</h3>
             <p>Strategy • Casual • Turn-Based</p>
-          </div>
+          </Link>
 
           <div className="game-card">
             <img src="/images/tetris.png" alt="Game" />
