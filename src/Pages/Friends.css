@@ -1,48 +1,48 @@
 @import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
-/* Page wrapper */
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #080c18;
+  background: var(--bg);
   font-family: "Rajdhani", sans-serif;
   color: #e2e8f8;
 }
 
-/* Centered container */
 .friends-container {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 24px;
+  padding: 38px 20px;
 }
 
-/* Card */
 .friends-box {
-  width: 420px;
-  background: #0e1425;
-  padding: 32px;
+  width: min(480px, 100%);
+  background: rgba(14, 20, 37, 0.95);
+  padding: 30px;
   border-radius: 16px;
-  border: 1px solid rgba(99, 140, 255, 0.15);
+  border: 1px solid rgba(99, 140, 255, 0.2);
   color: #e2e8f8;
   position: relative;
+  box-shadow:
+    0 18px 30px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(99, 140, 255, 0.14);
   animation: cardIn 0.4s ease both;
 }
 
 @keyframes cardIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* top-edge accent line */
 .friends-box::before {
   content: "";
   position: absolute;
@@ -51,14 +51,13 @@
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, #638cff, transparent);
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
-/* Titles */
 .friends-box h1 {
   text-align: center;
-  margin: 0 0 8px;
-  font-size: 1.6rem;
+  margin: 0;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -66,22 +65,21 @@
 }
 
 .friends-box h2 {
-  margin: 24px 0 0;
-  font-size: 0.75rem;
+  margin: 20px 0 10px;
+  font-size: 0.74rem;
   font-family: "JetBrains Mono", monospace;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #5a6a8a;
+  color: #8da4cf;
 }
 
-/* Search input */
 .friends-box input {
   width: 100%;
   padding: 11px 14px;
-  margin-top: 12px;
+  margin-top: 14px;
   border-radius: 10px;
-  border: 1px solid rgba(99, 140, 255, 0.2);
+  border: 1px solid rgba(99, 140, 255, 0.24);
   outline: none;
   font-size: 0.9rem;
   font-family: "JetBrains Mono", monospace;
@@ -94,106 +92,123 @@
 }
 
 .friends-box input::placeholder {
-  color: #5a6a8a;
+  color: #6e84ae;
 }
 
 .friends-box input:focus {
-  border-color: rgba(99, 140, 255, 0.5);
-  background: #0e1425;
+  border-color: rgba(99, 140, 255, 0.55);
+  background: #11182c;
 }
 
-/* Info text */
 .info {
   text-align: center;
-  margin-top: 10px;
-  font-size: 0.78rem;
+  margin: 10px 0 0;
+  font-size: 0.74rem;
   font-family: "JetBrains Mono", monospace;
-  color: #889bc1;
+  color: #93addd;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-/* Users list */
-.users-list {
+.users-list,
+.friends-list {
   margin-top: 12px;
-  max-height: 180px;
+  max-height: 196px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  padding-right: 2px;
 }
 
-.users-list::-webkit-scrollbar {
+.users-list::-webkit-scrollbar,
+.friends-list::-webkit-scrollbar {
   width: 4px;
 }
-.users-list::-webkit-scrollbar-track {
+
+.users-list::-webkit-scrollbar-track,
+.friends-list::-webkit-scrollbar-track {
   background: transparent;
 }
-.users-list::-webkit-scrollbar-thumb {
-  background: rgba(99, 140, 255, 0.2);
+
+.users-list::-webkit-scrollbar-thumb,
+.friends-list::-webkit-scrollbar-thumb {
+  background: rgba(99, 140, 255, 0.26);
   border-radius: 4px;
 }
 
-/* Each user row */
-.user-row {
+.user-row,
+.friends-list li {
+  list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 10px 12px;
   background: #141c32;
   border-radius: 10px;
-  border: 1px solid rgba(99, 140, 255, 0.1);
+  border: 1px solid rgba(99, 140, 255, 0.14);
   transition: border-color 0.2s;
 }
 
-.user-row:hover {
-  border-color: rgba(99, 140, 255, 0.3);
+.user-row:hover,
+.friends-list li:hover {
+  border-color: rgba(99, 140, 255, 0.33);
 }
 
-/* Username */
-.user-row span {
+.user-row span,
+.friends-list li span {
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #e2e8f8;
   letter-spacing: 0.03em;
+  overflow-wrap: anywhere;
 }
 
-/* Buttons */
-.user-row button {
-  padding: 6px 14px;
+.user-row button,
+.friends-list button {
+  padding: 6px 11px;
   border-radius: 8px;
   border: 1px solid rgba(99, 140, 255, 0.35);
   cursor: pointer;
-  background: rgba(99, 140, 255, 0.1);
-  color: #638cff;
-  font-size: 0.72rem;
+  background: rgba(99, 140, 255, 0.12);
+  color: #9fb9ee;
+  font-size: 0.66rem;
   font-family: "JetBrains Mono", monospace;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
   transition:
     background 0.2s,
     border-color 0.2s,
     box-shadow 0.2s;
 }
 
-.user-row button:hover {
-  background: rgba(99, 140, 255, 0.2);
-  border-color: rgba(99, 140, 255, 0.6);
+.user-row button:hover,
+.friends-list button:hover {
+  background: rgba(99, 140, 255, 0.22);
+  border-color: rgba(99, 140, 255, 0.62);
   box-shadow: 0 0 10px rgba(99, 140, 255, 0.15);
 }
 
-/* Friends list */
-.friends-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  height: 200px;
-  gap: 6px;
+.user-row .danger-btn,
+.friends-list .danger-btn {
+  border-color: rgba(255, 115, 132, 0.45);
+  color: #ff9ba8;
+  background: rgba(255, 85, 110, 0.12);
 }
 
+.user-row .danger-btn:hover,
+.friends-list .danger-btn:hover {
+  border-color: rgba(255, 115, 132, 0.78);
+  background: rgba(255, 85, 110, 0.22);
+  box-shadow: 0 0 10px rgba(255, 115, 132, 0.2);
+}
+
+.friends-list {
+  padding-left: 0;
+  margin-bottom: 0;
 .friends-list li {
   display: flex;
   justify-content: space-between;
@@ -231,7 +246,18 @@
 .friends-list::-webkit-scrollbar-track {
   background: transparent;
 }
-.friends-list::-webkit-scrollbar-thumb {
-  background: rgba(99, 140, 255, 0.2);
-  border-radius: 4px;
+
+@media (max-width: 600px) {
+  .friends-container {
+    padding: 28px 12px;
+  }
+
+  .friends-box {
+    padding: 24px 16px;
+  }
+
+  .user-row,
+  .friends-list li {
+    padding: 9px 10px;
+  }
 }
