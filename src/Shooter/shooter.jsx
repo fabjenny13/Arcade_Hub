@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./shooter.css";
 import Navbar from "../Components/Navbar";
+import GameBoot from "../Components/GameBoot";
 
 export default function Shooter() {
   const gameWidth = 600;
@@ -9,6 +10,7 @@ export default function Shooter() {
   const [gameState, setGameState] = useState("idle");
   const [playerX, setPlayerX] = useState(280);
   const [, forceRender] = useState(0);
+  const [booting, setBooting] = useState(true);
 
   const keys = useRef({ left: false, right: false, shoot: false });
   const playerXRef = useRef(280);
@@ -17,6 +19,13 @@ export default function Shooter() {
   const enemiesRef = useRef([]);
 
   useEffect(() => {
+    const timer = setTimeout(() => setBooting(false), 650);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (booting) return undefined;
+
     const down = (e) => {
       if (e.key === "ArrowLeft") keys.current.left = true;
       if (e.key === "ArrowRight") keys.current.right = true;
@@ -39,7 +48,7 @@ export default function Shooter() {
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
-  }, []);
+  }, [booting]);
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -121,6 +130,18 @@ export default function Shooter() {
     enemiesRef.current = [];
     setGameState("playing");
   };
+
+  if (booting) {
+    return (
+      <div className="page">
+        <Navbar />
+        <GameBoot
+          title="Shooter"
+          subtitle="Loading Enemies, Bullets, and Shooting Pad..."
+        />
+      </div>
+    );
+  }
 
   return (
     <div>
