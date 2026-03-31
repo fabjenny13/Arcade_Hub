@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
-import "./tictactoe.css";
+import GameBoot from "../Components/GameBoot";
+import "../Components/GameBoot.css";
+import "./TicTacToe.css";
 
-const WINNING_LINES = [
+const WIN_LINES = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -13,127 +15,264 @@ const WINNING_LINES = [
   [2, 4, 6],
 ];
 
-function calculateWinner(squares) {
-  for (let [a, b, c] of WINNING_LINES) {
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: [a, b, c] };
+function getWinner(board) {
+  for (let index = 0; index < WIN_LINES.length; index += 1) {
+    const [a, b, c] = WIN_LINES[index];
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
     }
   }
   return null;
 }
 
-function Square({ value, onClick, highlight }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        width: 100,
-        height: 100,
-        fontSize: 40,
-        fontFamily: "'Georgia', serif",
-        fontWeight: "bold",
-        border: "none",
-        background: highlight ? "#f0e6d3" : "#faf7f2",
-        color: value === "X" ? "#c0392b" : "#2c3e50",
-        cursor: value ? "default" : "pointer",
-        borderRadius: 12,
-        boxShadow: highlight
-          ? "0 4px 16px rgba(192,57,43,0.18)"
-          : "0 2px 8px rgba(0,0,0,0.07)",
-        transition: "background 0.2s, transform 0.1s, box-shadow 0.2s",
-        transform: value ? "scale(1)" : undefined,
-        outline: "none",
-        letterSpacing: 2,
-      }}
-      onMouseEnter={(e) => {
-        if (!value) e.currentTarget.style.background = "#ede8df";
-      }}
-      onMouseLeave={(e) => {
-        if (!value)
-          e.currentTarget.style.background = highlight ? "#f0e6d3" : "#faf7f2";
-      }}
-    >
-      {value}
-    </button>
-  );
+function getAvailableMoves(board) {
+  return board
+    .map((value, index) => (value ? null : index))
+    .filter((value) => value !== null);
+}
+
+function minimax(board, aiSymbol, humanSymbol, isAiTurn) {
+  const winner = getWinner(board);
+
+  if (winner === aiSymbol) return 10;
+  if (winner === humanSymbol) return -10;
+
+  const availableMoves = getAvailableMoves(board);
+  if (!availableMoves.length) return 0;
+
+  if (isAiTurn) {
+    let best = -Infinity;
+    for (let i = 0; i < availableMoves.length; i += 1) {
+      const move = availableMoves[i];
+      const copy = [...board];
+      copy[move] = aiSymbol;
+      best = Math.max(best, minimax(copy, aiSymbol, humanSymbol, false));
+    }
+    return best;
+  }
+
+  let best = Infinity;
+  for (let i = 0; i < availableMoves.length; i += 1) {
+    const move = availableMoves[i];
+    const copy = [...board];
+    copy[move] = humanSymbol;
+    best = Math.min(best, minimax(copy, aiSymbol, humanSymbol, true));
+  }
+  return best;
+}
+
+function getBestAiMove(board, aiSymbol = "O", humanSymbol = "X") {
+  const availableMoves = getAvailableMoves(board);
+  let bestScore = -Infinity;
+  let bestMove = availableMoves[0] ?? -1;
+
+  for (let i = 0; i < availableMoves.length; i += 1) {
+    const move = availableMoves[i];
+    const copy = [...board];
+    copy[move] = aiSymbol;
+    const score = minimax(copy, aiSymbol, humanSymbol, false);
+    if (score > bestScore) {
+      bestScore = score;
+      bestMove = move;
+    }
+  }
+
+  return bestMove;
+}
+
+function createInitialState() {
+  return {
+    mode: "ai",
+    board: Array(9).fill(null),
+    turn: "X",
+    winner: null,
+    draw: false,
+    score: {
+      X: 0,
+      O: 0,
+      draws: 0,
+    },
+  };
+}
+
+function applyMove(game, index) {
+  if (index < 0 || index > 8 || game.board[index] || game.winner || game.draw) {
+    return game;
+  }
+
+  const board = [...game.board];
+  board[index] = game.turn;
+
+  const winner = getWinner(board);
+  const draw = !winner && board.every(Boolean);
+
+  if (winner) {
+    return {
+      ...game,
+      board,
+      winner,
+      draw: false,
+      score: {
+        ...game.score,
+        [winner]: game.score[winner] + 1,
+      },
+    };
+  }
+
+  if (draw) {
+    return {
+      ...game,
+      board,
+      draw: true,
+      score: {
+        ...game.score,
+        draws: game.score.draws + 1,
+      },
+    };
+  }
+
+  return {
+    ...game,
+    board,
+    turn: game.turn === "X" ? "O" : "X",
+  };
 }
 
 export default function TicTacToe() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [xIsNext, setXIsNext] = useState(true);
+  const [booting, setBooting] = useState(true);
+  const [game, setGame] = useState(createInitialState);
 
-  const result = calculateWinner(squares);
-  const winLine = result?.line || [];
-  const isDraw = !result && squares.every(Boolean);
+  useEffect(() => {
+    const timer = setTimeout(() => setBooting(false), 650);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const status = result
-    ? `${result.winner} wins!`
-    : isDraw
-      ? "It's a draw!"
-      : `${xIsNext ? "X" : "O"}'s turn`;
+  useEffect(() => {
+    if (booting) return undefined;
+    if (game.mode !== "ai" || game.turn !== "O" || game.winner || game.draw) {
+      return undefined;
+    }
 
-  function handleClick(i) {
-    if (squares[i] || result) return;
-    const next = squares.slice();
-    next[i] = xIsNext ? "X" : "O";
-    setSquares(next);
-    setXIsNext(!xIsNext);
-  }
+    const snapshot = game.board.join("");
+    const timer = setTimeout(() => {
+      setGame((previous) => {
+        if (
+          previous.mode !== "ai" ||
+          previous.turn !== "O" ||
+          previous.winner ||
+          previous.draw ||
+          previous.board.join("") !== snapshot
+        ) {
+          return previous;
+        }
 
-  function reset() {
-    setSquares(Array(9).fill(null));
-    setXIsNext(true);
+        const bestMove = getBestAiMove(previous.board, "O", "X");
+        return applyMove(previous, bestMove);
+      });
+    }, 320);
+
+    return () => clearTimeout(timer);
+  }, [booting, game]);
+
+  const changeMode = (mode) => {
+    setGame((previous) => ({
+      ...previous,
+      mode,
+      board: Array(9).fill(null),
+      turn: "X",
+      winner: null,
+      draw: false,
+    }));
+  };
+
+  const restartRound = () => {
+    setGame((previous) => ({
+      ...previous,
+      board: Array(9).fill(null),
+      turn: "X",
+      winner: null,
+      draw: false,
+    }));
+  };
+
+  const resetMatch = () => {
+    setGame((previous) => ({
+      ...previous,
+      board: Array(9).fill(null),
+      turn: "X",
+      winner: null,
+      draw: false,
+      score: {
+        X: 0,
+        O: 0,
+        draws: 0,
+      },
+    }));
+  };
+
+  const statusText = game.winner
+    ? `${game.winner} wins this round`
+    : game.draw
+      ? "Draw"
+      : `Turn: ${game.turn}`;
+
+  if (booting) {
+    return (
+      <div className="ttt-page">
+        <Navbar />
+        <GameBoot title="Tic Tac Toe" subtitle="Loading board, rules, and AI strategy..." />
+      </div>
+    );
   }
 
   return (
-    <div class="page">
+    <div className="ttt-page">
       <Navbar />
-      <div class="game-container">
-        <h1 class="title">Tic Tac Toe</h1>
 
-        <p
-          style={{
-            fontSize: 15,
-            color: result
-              ? result.winner === "X"
-                ? "#c0392b"
-                : "#2c3e50"
-              : "#888",
-            letterSpacing: 3,
-            marginBottom: 32,
-            textTransform: "uppercase",
-            fontWeight: result || isDraw ? "bold" : "normal",
-            transition: "color 0.3s",
-          }}
-        >
-          {status}
-        </p>
+      <div className="ttt-container">
+        <header className="ttt-header">
+          <h1>Tic Tac Toe</h1>
+          <div className="ttt-mode-switch">
+            <button
+              className={game.mode === "ai" ? "active" : ""}
+              onClick={() => changeMode("ai")}
+            >
+              Player vs AI
+            </button>
+            <button
+              className={game.mode === "pvp" ? "active" : ""}
+              onClick={() => changeMode("pvp")}
+            >
+              Player vs Player
+            </button>
+          </div>
+        </header>
 
-        <div class="grid">
-          {squares.map((val, i) => (
-            <Square
-              key={i}
-              value={val}
-              onClick={() => handleClick(i)}
-              highlight={winLine.includes(i)}
-            />
+        <div className="ttt-scorebar">
+          <span>X: {game.score.X}</span>
+          <span>O: {game.score.O}</span>
+          <span>Draws: {game.score.draws}</span>
+        </div>
+
+        <p className="ttt-status">{statusText}</p>
+
+        <div className="ttt-grid" role="grid" aria-label="Tic Tac Toe board">
+          {game.board.map((cell, index) => (
+            <button
+              key={index}
+              className="ttt-cell"
+              onClick={() => setGame((previous) => applyMove(previous, index))}
+              disabled={Boolean(cell) || Boolean(game.winner) || game.draw}
+            >
+              {cell || ""}
+            </button>
           ))}
         </div>
 
-        <button
-          onClick={reset}
-          class="reset-button"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#2c3e50";
-            e.currentTarget.style.color = "#f5f0e8";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#2c3e50";
-          }}
-        >
-          New Game
-        </button>
+        <div className="ttt-actions">
+          <button onClick={restartRound}>Restart Round</button>
+          <button onClick={resetMatch}>Reset Match</button>
+        </div>
       </div>
     </div>
   );

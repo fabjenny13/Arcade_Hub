@@ -9,15 +9,11 @@ import FlappyBird from "./FlappyBird/FlappyBird";
 import Friends from "./Pages/Friends";
 import Snake from "./Snake/Snake";
 import TicTacToe from "./TicTacToe/tictactoe";
-import PingPong from "./PingPong/pingpong";
 import Shooter from "./Shooter/Shooter";
 import LoadingScreen from "./Components/LoadingScreen";
 import BrickBreaker from "./BrickBreaker/BrickBreaker";
 import Pong from "./Pong/Pong";
 import Tetris from "./Tetris/Tetris";
-import TicTacToe from "./TicTacToe/TicTacToe";
-
-
 
 function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -49,8 +45,6 @@ function App() {
       <Route path="/pong" element={<Pong />} />
       <Route path="/tetris" element={<Tetris />} />
       <Route path="/tictactoe" element={<TicTacToe />} />
-      <Route path="/tictactoe" element={<TicTacToe />} />
-      <Route path="/pingpong" element={<PingPong />} />
       <Route path="/shooter" element={<Shooter />} />
     </Routes>
   );
