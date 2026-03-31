@@ -209,6 +209,42 @@
 .friends-list {
   padding-left: 0;
   margin-bottom: 0;
+.friends-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-family: "JetBrains Mono", monospace;
+  color: #e2e8f8;
+  background: #141c32;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 140, 255, 0.1);
+  letter-spacing: 0.03em;
+}
+
+.friends-list a {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #638cff;
+  text-decoration: none;
+  border: 1px solid rgba(99, 140, 255, 0.35);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: rgba(99, 140, 255, 0.1);
+}
+
+.friends-list a:hover {
+  background: rgba(99, 140, 255, 0.2);
+  border-color: rgba(99, 140, 255, 0.6);
+}
+
+.friends-list::-webkit-scrollbar {
+  width: 4px;
+}
+.friends-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 @media (max-width: 600px) {

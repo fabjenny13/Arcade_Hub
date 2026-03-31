@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Friends.css";
@@ -93,6 +93,8 @@ export default function Friends() {
                 <button className="danger-btn" onClick={() => handleRemove(friend)}>
                   Remove Friend
                 </button>
+                <Link to={`/profile/${encodeURIComponent(f)}`}>View Profile</Link>
+
               </li>
             ))}
           </ul>

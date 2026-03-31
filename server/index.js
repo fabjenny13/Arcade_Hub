@@ -278,6 +278,42 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, { users: filtered });
   }
 
+  if (req.method === "GET" && url.pathname.startsWith("/api/users/")) {
+    const session = getSession(req);
+    if (!session) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    const requestedUsername = decodeURIComponent(
+      url.pathname.replace("/api/users/", ""),
+    ).trim();
+
+    if (!requestedUsername) {
+      return sendJson(res, 400, { message: "Username is required" });
+    }
+
+    const users = await readUsers();
+    const currentUser = users.find((u) => u.id === session.userId);
+
+    if (!currentUser) {
+      return sendJson(res, 401, { message: "Unauthorized" });
+    }
+
+    if (
+      currentUser.username !== requestedUsername &&
+      !currentUser.friends.includes(requestedUsername)
+    ) {
+      return sendJson(res, 403, { message: "You can only view your friends' profiles" });
+    }
+
+    const requestedUser = users.find((u) => u.username === requestedUsername);
+    if (!requestedUser) {
+      return sendJson(res, 404, { message: "User not found" });
+    }
+
+    return sendJson(res, 200, { user: sanitizeUser(requestedUser) });
+  }
+
 
   if (req.method === "GET" && url.pathname === "/api/leaderboard") {
     const session = getSession(req);

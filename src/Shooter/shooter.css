@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  background: black;
+  color: white;
+}
+
+.game {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  margin: 50px auto;
+  background: black;
+  border: 2px solid white;
+  overflow: hidden;
+}
+
+/* Player */
+.player {
+  position: absolute;
+  width: 40px;
+  height: 10px;
+  background: white;
+}
+
+/* Bullet */
+.bullet {
+  position: absolute;
+  width: 4px;
+  height: 10px;
+  background: white;
+}
+
+/* Enemy */
+.enemy {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid white;
+}
+
+.start-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: 2px solid white;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 10;
+}
+
+.start-button:hover {
+  background: white;
+  color: black;
+}
+
+.button-div {
+}

@@ -87,6 +87,14 @@ export function AuthProvider({ children }) {
     return data.users;
   };
 
+  const fetchUserProfile = async (username) => {
+    const data = await apiRequest(`/api/users/${encodeURIComponent(username)}`, {
+      method: "GET",
+    });
+
+    return data.user;
+  };
+
   const addFriend = async (friendUsername) => {
     const data = await apiRequest("/api/friends", {
       method: "POST",
@@ -127,6 +135,7 @@ export function AuthProvider({ children }) {
       addFriend,
       removeFriend,
       fetchUsers,
+      fetchUserProfile,
       reportScore,
     }),
     [user, authLoading],
