@@ -75,7 +75,10 @@ export default function Friends() {
               <div key={u.username} className="user-row">
                 <span>{u.username}</span>
                 {u.isFriend ? (
-                  <button className="danger-btn" onClick={() => handleRemove(u.username)}>
+                  <button
+                    className="danger-btn"
+                    onClick={() => handleRemove(u.username)}
+                  >
                     Remove
                   </button>
                 ) : (
@@ -90,11 +93,15 @@ export default function Friends() {
             {(user?.friends || []).map((friend) => (
               <li key={friend}>
                 <span>{friend}</span>
-                <button className="danger-btn" onClick={() => handleRemove(friend)}>
+                <button
+                  className="danger-btn"
+                  onClick={() => handleRemove(friend)}
+                >
                   Remove Friend
                 </button>
-                <Link to={`/profile/${encodeURIComponent(f)}`}>View Profile</Link>
-
+                <Link to={`/profile/${encodeURIComponent(friend)}`}>
+                  View Profile
+                </Link>
               </li>
             ))}
           </ul>
