@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Friends.css";
@@ -9,6 +9,8 @@ export default function Friends() {
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
@@ -52,6 +54,10 @@ export default function Friends() {
     } catch (error) {
       setMessage(error.message);
     }
+  };
+
+  const handleView = (friend) => {
+    navigate(`/profile/${encodeURIComponent(friend)}`);
   };
 
   return (
@@ -99,9 +105,10 @@ export default function Friends() {
                 >
                   Remove Friend
                 </button>
-                <Link to={`/profile/${encodeURIComponent(friend)}`}>
+
+                <button className="view-btn" onClick={() => handleView(friend)}>
                   View Profile
-                </Link>
+                </button>
               </li>
             ))}
           </ul>

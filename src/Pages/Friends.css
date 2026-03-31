@@ -192,6 +192,17 @@
   box-shadow: 0 0 10px rgba(99, 140, 255, 0.15);
 }
 
+.view-btn {
+  border-color: rgba(99, 140, 255, 0.35);
+  color: #638cff;
+  background: rgba(99, 140, 255, 0.1);
+}
+
+.view-btn:hover {
+  background: rgba(99, 140, 255, 0.2);
+  border-color: rgba(99, 140, 255, 0.6);
+}
+
 .user-row .danger-btn,
 .friends-list .danger-btn {
   border-color: rgba(255, 115, 132, 0.45);
@@ -221,23 +232,6 @@
     border-radius: 10px;
     border: 1px solid rgba(99, 140, 255, 0.1);
     letter-spacing: 0.03em;
-  }
-
-  .friends-list a {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #638cff;
-    text-decoration: none;
-    border: 1px solid rgba(99, 140, 255, 0.35);
-    border-radius: 8px;
-    padding: 6px 10px;
-    background: rgba(99, 140, 255, 0.1);
-  }
-
-  .friends-list a:hover {
-    background: rgba(99, 140, 255, 0.2);
-    border-color: rgba(99, 140, 255, 0.6);
   }
 
   .friends-list::-webkit-scrollbar {
