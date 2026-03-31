@@ -144,7 +144,7 @@ export default function Shooter() {
   }
 
   return (
-    <div>
+    <div className="page">
       <Navbar />
       <div className="game">
         <div
