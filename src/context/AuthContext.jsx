@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext();
 
@@ -13,7 +14,9 @@ async function apiRequest(path, options = {}) {
     ...options,
   });
 
-  const hasJson = response.headers.get("content-type")?.includes("application/json");
+  const hasJson = response.headers
+    .get("content-type")
+    ?.includes("application/json");
   const payload = hasJson ? await response.json() : null;
 
   if (!response.ok) {
@@ -31,20 +34,15 @@ export function AuthProvider({ children }) {
     let isMounted = true;
 
     const loadSession = async () => {
-      try {
-        const data = await apiRequest("/api/auth/me", { method: "GET" });
-        if (isMounted) {
-          setUser(data.user);
-        }
-      } catch {
-        if (isMounted) {
-          setUser(null);
-        }
-      } finally {
-        if (isMounted) {
-          setAuthLoading(false);
-        }
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        setUser(null);
+      } else {
+        setUser(data.user);
       }
+
+      setAuthLoading(false);
     };
 
     loadSession();
@@ -80,17 +78,23 @@ export function AuthProvider({ children }) {
   };
 
   const fetchUsers = async (search = "") => {
-    const data = await apiRequest(`/api/users?search=${encodeURIComponent(search)}`, {
-      method: "GET",
-    });
+    const data = await apiRequest(
+      `/api/users?search=${encodeURIComponent(search)}`,
+      {
+        method: "GET",
+      },
+    );
 
     return data.users;
   };
 
   const fetchUserProfile = async (username) => {
-    const data = await apiRequest(`/api/users/${encodeURIComponent(username)}`, {
-      method: "GET",
-    });
+    const data = await apiRequest(
+      `/api/users/${encodeURIComponent(username)}`,
+      {
+        method: "GET",
+      },
+    );
 
     return data.user;
   };
