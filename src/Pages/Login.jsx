@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Login.css";
 
@@ -12,7 +12,7 @@ export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
-  const { login, signup } = useAuth();
+  const { login, signup, loginWithGoogle } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +22,6 @@ export default function Login() {
       setError("Please fill all fields");
       return;
     }
-
     setIsSubmitting(true);
 
     try {
@@ -34,6 +33,7 @@ export default function Login() {
 
       navigate("/profile");
     } catch (requestError) {
+      console.log(requestError);
       setError(requestError.message);
     } finally {
       setIsSubmitting(false);
@@ -68,6 +68,10 @@ export default function Login() {
 
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Please wait..." : isSignup ? "Sign Up" : "Login"}
+            </button>
+
+            <button type="button" onClick={loginWithGoogle}>
+              Continue with Google
             </button>
           </form>
 

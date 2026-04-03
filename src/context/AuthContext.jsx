@@ -52,29 +52,41 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async (username, password) => {
-    const data = await apiRequest("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
+  const login = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
+
+    if (error) throw new Error(error.message);
 
     setUser(data.user);
     return data.user;
   };
 
-  const signup = async (username, password) => {
-    const data = await apiRequest("/api/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
+  const signup = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
     });
+
+    if (error) throw new Error(error.message);
 
     setUser(data.user);
     return data.user;
   };
 
   const logout = async () => {
-    await apiRequest("/api/auth/logout", { method: "POST" });
+    await supabase.auth.signOut();
     setUser(null);
+  };
+
+  const loginWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (error) return new Error(error.message);
   };
 
   const fetchUsers = async (search = "") => {
@@ -136,6 +148,7 @@ export function AuthProvider({ children }) {
       login,
       signup,
       logout,
+      loginWithGoogle,
       addFriend,
       removeFriend,
       fetchUsers,
