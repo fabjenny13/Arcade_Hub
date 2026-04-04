@@ -53,6 +53,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  //USER LOGIN
   const ensureUserProfile = async (user) => {
     const { data } = await supabase
       .from("users")
@@ -110,48 +111,130 @@ export function AuthProvider({ children }) {
     if (error) return new Error(error.message);
   };
 
-  const fetchUsers = async (search = "") => {
-    const data = await apiRequest(
-      `/api/users?search=${encodeURIComponent(search)}`,
-      {
-        method: "GET",
-      },
-    );
+  //FRIENDS
 
-    return data.users;
+  const fetchUsers = async (search = "") => {
+    const { data: userData } = await supabase.auth.getUser();
+    const currentUser = userData.user;
+
+    if (!currentUser) throw new Error("Not authenticated");
+
+    // 1. get all users
+    const { data: allUsers, error: usersError } = await supabase
+      .from("users")
+      .select("id, username, xp");
+
+    if (usersError) throw new Error(usersError.message);
+
+    // 2. get friend relationships
+    const { data: relations, error: relError } = await supabase
+      .from("friends")
+      .select("friend_id")
+      .eq("user_id", currentUser.id);
+
+    if (relError) throw new Error(relError.message);
+
+    const friendIds = relations.map((r) => r.friend_id);
+
+    // 3. attach isFriend + filter
+    return allUsers
+      .filter((u) => u.id !== currentUser.id)
+      .filter((u) => u.username.toLowerCase().includes(search.toLowerCase()))
+      .map((u) => ({
+        ...u,
+        isFriend: friendIds.includes(u.id),
+      }));
   };
 
   const fetchUserProfile = async (username) => {
-    const data = await apiRequest(
-      `/api/users/${encodeURIComponent(username)}`,
-      {
-        method: "GET",
-      },
-    );
+    const { data: userData } = await supabase.auth.getUser();
+    const currentUser = userData.user;
 
-    return data.user;
+    if (!currentUser) throw new Error("Not authenticated");
+
+    // 1. get requested user
+    const { data: requestedUser, error: userError } = await supabase
+      .from("users")
+      .select("id, username, xp")
+      .eq("username", username)
+      .maybeSingle();
+
+    if (userError) throw new Error(userError.message);
+    if (!requestedUser) throw new Error("User not found");
+
+    // 2. check friendship
+    const { data: relation } = await supabase
+      .from("friends")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .eq("friend_id", requestedUser.id)
+      .maybeSingle();
+
+    if (!relation && currentUser.id !== requestedUser.id) {
+      throw new Error("You can only view your friends' profiles");
+    }
+
+    return requestedUser;
   };
 
   const addFriend = async (friendUsername) => {
-    const data = await apiRequest("/api/friends", {
-      method: "POST",
-      body: JSON.stringify({ friendUsername }),
-    });
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
 
-    setUser(data.user);
-    return data.user;
+    if (!user) throw new Error("Not authenticated");
+
+    const { data: friendUser } = await supabase
+      .from("users")
+      .select("id, username")
+      .eq("username", friendUsername)
+      .single();
+
+    if (!friendUser) throw new Error("User not found");
+
+    await supabase
+      .from("friends")
+      .insert([{ user_id: user.id, friend_id: friendUser.id }]);
+
+    if (error) throw new Error(error.message);
   };
 
   const removeFriend = async (friendUsername) => {
-    const data = await apiRequest("/api/friends", {
-      method: "DELETE",
-      body: JSON.stringify({ friendUsername }),
-    });
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
 
-    setUser(data.user);
-    return data.user;
+    const { data: friendUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("username", friendUsername)
+      .maybeSingle();
+
+    await supabase
+      .from("friends")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("friend_id", friendUser.id);
   };
 
+  const fetchFriends = async () => {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+
+    const { data: relations } = await supabase
+      .from("friends")
+      .select("friend_id")
+      .eq("user_id", user.id);
+
+    const friendIds = relations.map((r) => r.friend_id);
+
+    const { data: friends } = await supabase
+      .from("users")
+      .select("id, username, xp")
+      .in("id", friendIds);
+
+    return friends;
+  };
+
+  //SCORE AND LEADERBOARD
   const reportScore = async (game, scoreDelta) => {
     const { data: userData } = await supabase.auth.getUser();
     const user = userData.user;
@@ -217,6 +300,7 @@ export function AuthProvider({ children }) {
       loginWithGoogle,
       addFriend,
       removeFriend,
+      fetchFriends,
       fetchUsers,
       fetchUserProfile,
       reportScore,

@@ -1,16 +1,35 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import Navbar from "../Components/Navbar";
 import "./Friends.css";
 
 export default function Friends() {
-  const { user, authLoading, addFriend, removeFriend, fetchUsers } = useAuth();
+  const {
+    user,
+    authLoading,
+    addFriend,
+    removeFriend,
+    fetchUsers,
+    fetchFriends,
+  } = useAuth();
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
+  const [friends, setFriends] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadFriends = async () => {
+      const data = await fetchFriends();
+      setFriends(data);
+    };
+
+    loadFriends();
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -34,6 +53,9 @@ export default function Friends() {
   const refreshUsers = async () => {
     const refreshedUsers = await fetchUsers(search);
     setUsers(refreshedUsers);
+
+    const refreshedFriends = await fetchFriends();
+    setFriends(refreshedFriends);
   };
 
   const handleAdd = async (username) => {
@@ -96,17 +118,21 @@ export default function Friends() {
 
           <h2>Your Friends</h2>
           <ul className="friends-list">
-            {(user?.friends || []).map((friend) => (
-              <li key={friend}>
-                <span>{friend}</span>
+            {friends.map((friend) => (
+              <li key={friend.id}>
+                <span>{friend.username}</span>
+
                 <button
                   className="danger-btn"
-                  onClick={() => handleRemove(friend)}
+                  onClick={() => handleRemove(friend.username)}
                 >
                   Remove Friend
                 </button>
 
-                <button className="view-btn" onClick={() => handleView(friend)}>
+                <button
+                  className="view-btn"
+                  onClick={() => handleView(friend.username)}
+                >
                   View Profile
                 </button>
               </li>
