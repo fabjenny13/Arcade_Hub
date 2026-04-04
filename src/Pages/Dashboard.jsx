@@ -89,7 +89,7 @@ export default function Dashboard() {
 
         {user ? (
           <div className="user-section">
-            <span className="username">Hello, {user.username}</span>
+            <span className="username">Hello, {user.email.split("@")[0]}</span>
             <button
               className="profile-btn"
               onClick={() => navigate("/profile")}

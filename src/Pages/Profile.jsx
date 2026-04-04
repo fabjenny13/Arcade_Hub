@@ -17,7 +17,7 @@ export default function Profile() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [profileError, setProfileError] = useState("");
 
-  const isOwnProfile = !username || username === user?.username;
+  const isOwnProfile = !username || username === user?.email.split("@")[0];
 
   const handleLogout = async () => {
     await logout();
@@ -73,7 +73,8 @@ export default function Profile() {
   if (!user) return null;
 
   const displayedUser = profileUser || user;
-  const avatarLetter = displayedUser.username?.[0]?.toUpperCase() ?? "?";
+  const avatarLetter =
+    displayedUser.email.split("@")[0]?.[0]?.toUpperCase() ?? "?";
 
   const scoreEntries = Object.entries(displayedUser.scores || {});
 
@@ -88,7 +89,9 @@ export default function Profile() {
             <p className="profile-label">
               {isOwnProfile ? "Player" : "Friend"}
             </p>
-            <h1 className="profile-name">{displayedUser.username}</h1>
+            <h1 className="profile-name">
+              {displayedUser.email.split("@")[0]}
+            </h1>
             <p className="profile-xp">{displayedUser.xp} XP</p>
           </div>
 
@@ -154,7 +157,8 @@ export default function Profile() {
                         : index === 2
                           ? "rank-3"
                           : "";
-                  const isMe = u.username === user.username ? "is-me" : "";
+                  const isMe =
+                    u.username === user.email.split("@")[0] ? "is-me" : "";
                   const rankSymbol =
                     index < 3 ? RANK_SYMBOLS[index] : `${index + 1}.`;
 
