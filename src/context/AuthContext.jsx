@@ -4,28 +4,6 @@ import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext();
 
-async function apiRequest(path, options = {}) {
-  const response = await fetch(path, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
-
-  const hasJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
-  const payload = hasJson ? await response.json() : null;
-
-  if (!response.ok) {
-    throw new Error(payload?.message || "Request failed");
-  }
-
-  return payload;
-}
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -288,6 +266,17 @@ export function AuthProvider({ children }) {
     return data;
   };
 
+  const fetchUserScores = async (userId) => {
+    const { data, error } = await supabase
+      .from("scores")
+      .select("game, score")
+      .eq("user_id", userId);
+
+    if (error) throw new Error(error.message);
+
+    return data;
+  };
+
   const value = useMemo(
     () => ({
       user,
@@ -303,6 +292,7 @@ export function AuthProvider({ children }) {
       fetchUserProfile,
       reportScore,
       fetchLeaderboard,
+      fetchUserScores,
     }),
     [user, authLoading],
   );

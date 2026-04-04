@@ -9,14 +9,21 @@ const RANK_SYMBOLS = ["🥇", "🥈", "🥉"];
 export default function Profile() {
   const navigate = useNavigate();
   const { username } = useParams();
-  const { user, authLoading, logout, fetchUserProfile, fetchLeaderboard } =
-    useAuth();
+  const {
+    user,
+    authLoading,
+    logout,
+    fetchUserProfile,
+    fetchLeaderboard,
+    fetchUserScores,
+  } = useAuth();
 
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [profileUser, setProfileUser] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [profileError, setProfileError] = useState("");
+  const [scores, setScores] = useState([]);
 
   const isOwnProfile = !username || username === user?.username;
 
@@ -58,6 +65,9 @@ export default function Profile() {
 
         const profile = await fetchUserProfile(targetUsername);
         setProfileUser(profile);
+
+        const userScores = await fetchUserScores(profile.id);
+        setScores(userScores);
       } catch (error) {
         setProfileError(error.message);
       } finally {
@@ -66,21 +76,6 @@ export default function Profile() {
     }
 
     loadProfile();
-
-    async function loadFriendProfile() {
-      try {
-        setLoadingProfile(true);
-        setProfileError("");
-        const friend = await fetchUserProfile(username);
-        setProfileUser(friend);
-      } catch (error) {
-        setProfileError(error.message);
-      } finally {
-        setLoadingProfile(false);
-      }
-    }
-
-    loadFriendProfile();
   }, [user, isOwnProfile, username, fetchUserProfile]);
 
   if (!authLoading && !user) return <Navigate to="/login" replace />;
@@ -88,8 +83,6 @@ export default function Profile() {
 
   const displayedUser = profileUser || user;
   const avatarLetter = displayedUser?.username?.[0]?.toUpperCase() ?? "?";
-
-  const scoreEntries = Object.entries(displayedUser.scores || {});
 
   return (
     <div className="profile-page">
@@ -131,12 +124,11 @@ export default function Profile() {
             <p className="loading-text">{profileError}</p>
           ) : (
             <ul className="leaderboard-list">
-              {scoreEntries.length ? (
-                scoreEntries.map(([game, score]) => (
-                  <li key={game}>
-                    <span>—</span>
-                    <span>{game}</span>
-                    <span>{score} pts</span>
+              {scores.length ? (
+                scores.map((s, index) => (
+                  <li key={index}>
+                    <span>{s.game}</span>
+                    <span>{s.score} pts</span>
                   </li>
                 ))
               ) : (
