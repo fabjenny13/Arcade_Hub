@@ -194,8 +194,6 @@ export function AuthProvider({ children }) {
     await supabase
       .from("friends")
       .insert([{ user_id: user.id, friend_id: friendUser.id }]);
-
-    if (error) throw new Error(error.message);
   };
 
   const removeFriend = async (friendUsername) => {
