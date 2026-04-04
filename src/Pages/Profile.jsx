@@ -9,7 +9,8 @@ const RANK_SYMBOLS = ["🥇", "🥈", "🥉"];
 export default function Profile() {
   const navigate = useNavigate();
   const { username } = useParams();
-  const { user, authLoading, logout, fetchUserProfile } = useAuth();
+  const { user, authLoading, logout, fetchUserProfile, fetchLeaderboard } =
+    useAuth();
 
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
@@ -29,10 +30,9 @@ export default function Profile() {
 
     async function fetchUsers() {
       try {
-        const res = await fetch("/api/leaderboard", { credentials: "include" });
-        if (!res.ok) throw new Error("Failed to fetch users");
-        const data = await res.json();
-        setUsers(data.users || []);
+        const data = await fetchLeaderboard();
+        console.log(data);
+        setUsers(data || []);
       } catch (err) {
         console.error(err);
       } finally {

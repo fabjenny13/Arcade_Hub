@@ -39,6 +39,7 @@ export function AuthProvider({ children }) {
       if (error || !data.user) {
         setUser(null);
       } else {
+        await ensureUserProfile(data.user);
         setUser(data.user);
       }
 
@@ -52,6 +53,22 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  const ensureUserProfile = async (user) => {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (!data) {
+      await supabase.from("users").insert({
+        id: user.id,
+        username: user.email.split("@")[0], // temp username
+        xp: 0,
+      });
+    }
+  };
+
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -59,6 +76,8 @@ export function AuthProvider({ children }) {
     });
 
     if (error) throw new Error(error.message);
+
+    await ensureUserProfile(data.user);
 
     setUser(data.user);
     return data.user;
@@ -71,6 +90,8 @@ export function AuthProvider({ children }) {
     });
 
     if (error) throw new Error(error.message);
+
+    await ensureUserProfile(data.user);
 
     setUser(data.user);
     return data.user;
@@ -175,6 +196,16 @@ export function AuthProvider({ children }) {
     await supabase.from("users").update({ xp: newXp }).eq("id", user.id);
   };
 
+  const fetchLeaderboard = async () => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .order("xp", { ascending: false });
+
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
   const value = useMemo(
     () => ({
       user,
@@ -188,6 +219,7 @@ export function AuthProvider({ children }) {
       fetchUsers,
       fetchUserProfile,
       reportScore,
+      fetchLeaderboard,
     }),
     [user, authLoading],
   );
