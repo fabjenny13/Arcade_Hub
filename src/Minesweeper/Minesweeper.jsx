@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./Minesweeper.css";
 import Navbar from "../Components/Navbar";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
 
@@ -38,7 +38,13 @@ function generateBoard() {
         dirs.forEach((dc) => {
           const nr = r + dr;
           const nc = c + dc;
-          if (nr >= 0 && nc >= 0 && nr < SIZE && nc < SIZE && board[nr][nc].mine) {
+          if (
+            nr >= 0 &&
+            nc >= 0 &&
+            nr < SIZE &&
+            nc < SIZE &&
+            board[nr][nc].mine
+          ) {
             count += 1;
           }
         }),
@@ -132,7 +138,9 @@ export default function Minesweeper() {
       }
     }
 
-    const nextRevealed = nextBoard.flat().filter((cell) => cell.revealed && !cell.mine).length;
+    const nextRevealed = nextBoard
+      .flat()
+      .filter((cell) => cell.revealed && !cell.mine).length;
 
     setBoard(nextBoard);
 
@@ -148,13 +156,20 @@ export default function Minesweeper() {
   };
 
   const statusLabel =
-    status === "won" ? "You cleared the board" : status === "lost" ? "Mine hit" : "In progress";
+    status === "won"
+      ? "You cleared the board"
+      : status === "lost"
+        ? "Mine hit"
+        : "In progress";
 
   if (booting) {
     return (
       <div className="ms-page">
         <Navbar />
-        <GameBoot title="Minesweeper" subtitle="Loading mines and clue map..." />
+        <GameBoot
+          title="Minesweeper"
+          subtitle="Loading mines and clue map..."
+        />
       </div>
     );
   }
@@ -168,13 +183,18 @@ export default function Minesweeper() {
           <h1>Minesweeper</h1>
           <div className="ms-stats">
             <span>Score: {score}</span>
-            <span>Safe: {revealedSafeCells}/{SAFE_CELLS}</span>
+            <span>
+              Safe: {revealedSafeCells}/{SAFE_CELLS}
+            </span>
             <span>Mines: {MINES}</span>
           </div>
           <p className={`ms-status ms-status-${status}`}>{statusLabel}</p>
         </header>
 
-        <div className="ms-grid" style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(32px, 42px))` }}>
+        <div
+          className="ms-grid"
+          style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(32px, 42px))` }}
+        >
           {board.map((row, r) =>
             row.map((cell, c) => (
               <button

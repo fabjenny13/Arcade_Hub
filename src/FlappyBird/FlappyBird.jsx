@@ -4,7 +4,7 @@ import "./style.css";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 
 export default function FlappyBird() {
   const { user } = useAuth();
