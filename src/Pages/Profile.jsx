@@ -45,12 +45,27 @@ export default function Profile() {
   }, [user, isOwnProfile]);
 
   useEffect(() => {
-    if (!user || isOwnProfile) {
-      setProfileUser(user);
-      setProfileError("");
-      setLoadingProfile(false);
-      return;
+    if (!user) return;
+
+    async function loadProfile() {
+      try {
+        setLoadingProfile(true);
+        setProfileError("");
+
+        const targetUsername = isOwnProfile
+          ? user.email.split("@")[0] // or better: store username in metadata
+          : username;
+
+        const profile = await fetchUserProfile(targetUsername);
+        setProfileUser(profile);
+      } catch (error) {
+        setProfileError(error.message);
+      } finally {
+        setLoadingProfile(false);
+      }
     }
+
+    loadProfile();
 
     async function loadFriendProfile() {
       try {
@@ -87,9 +102,7 @@ export default function Profile() {
             <p className="profile-label">
               {isOwnProfile ? "Player" : "Friend"}
             </p>
-            <h1 className="profile-name">
-              {displayedUser?.username || "Player"}
-            </h1>
+            <h1 className="profile-name">{displayedUser?.username}</h1>
             <p className="profile-xp">{displayedUser.xp} XP</p>
           </div>
 

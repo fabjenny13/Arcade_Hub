@@ -126,7 +126,7 @@ export default function Friends() {
                   className="danger-btn"
                   onClick={() => handleRemove(friend.username)}
                 >
-                  Remove Friend
+                  Remove
                 </button>
 
                 <button
