@@ -132,13 +132,47 @@ export function AuthProvider({ children }) {
   };
 
   const reportScore = async (game, scoreDelta) => {
-    const data = await apiRequest("/api/scores", {
-      method: "POST",
-      body: JSON.stringify({ game, scoreDelta }),
-    });
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
 
-    setUser(data.user);
-    return data;
+    if (!user) throw new Error("Not authenticated.");
+
+    const { data: existing } = await supabase
+      .from("scores")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("game", game)
+      .single();
+
+    let newScore = scoreDelta;
+
+    console.log(existing);
+    if (existing) {
+      newScore = existing.score + scoreDelta;
+
+      await supabase
+        .from("scores")
+        .update({ score: newScore })
+        .eq("id", existing.id);
+    } else {
+      await supabase.from("scores").insert({
+        user_id: user.id,
+        game,
+        score: scoreDelta,
+      });
+    }
+
+    const xpGain = Math.max(1, Math.ceil(scoreDelta * 0.2));
+
+    const { data: profile } = await supabase
+      .from("users")
+      .select("xp")
+      .eq("id", user.id)
+      .single();
+
+    const newXp = (profile?.xp || 0) + xpGain;
+
+    await supabase.from("users").update({ xp: newXp }).eq("id", user.id);
   };
 
   const value = useMemo(

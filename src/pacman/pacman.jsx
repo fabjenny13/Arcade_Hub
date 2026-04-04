@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./pacman.css";
 import Navbar from "../Components/Navbar";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
 
@@ -154,7 +154,9 @@ export default function Pacman() {
         const newGrid = grid.map((r) => [...r]);
         newGrid[newRow][newCol] = 0;
 
-        const remainingPellets = newGrid.flat().filter((cell) => cell === 2).length;
+        const remainingPellets = newGrid
+          .flat()
+          .filter((cell) => cell === 2).length;
 
         setGrid(newGrid);
         setScore(nextScore);
@@ -176,7 +178,7 @@ export default function Pacman() {
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [booting, player, ghosts, grid, score, gameState, user, reportScore, handleCollision]);
+  }, [booting, player, ghosts, grid, gameState, user, handleCollision]);
 
   // Ghost movement loop
   useEffect(() => {
@@ -211,7 +213,10 @@ export default function Pacman() {
     return (
       <div className="pacman-page">
         <Navbar />
-        <GameBoot title="Pac-Man" subtitle="Loading maze, pellets, and ghosts..." />
+        <GameBoot
+          title="Pac-Man"
+          subtitle="Loading maze, pellets, and ghosts..."
+        />
       </div>
     );
   }
@@ -254,29 +259,29 @@ export default function Pacman() {
           </div>
 
           <div className="board">
-          {grid.map((row, i) =>
-            row.map((cell, j) => {
-              let className = "cell";
-              const ghostOnCell = ghosts.find(
-                (ghost) => ghost.row === i && ghost.col === j,
-              );
+            {grid.map((row, i) =>
+              row.map((cell, j) => {
+                let className = "cell";
+                const ghostOnCell = ghosts.find(
+                  (ghost) => ghost.row === i && ghost.col === j,
+                );
 
-              if (cell === 1) className += " wall";
-              if (cell === 2) className += " pellet";
+                if (cell === 1) className += " wall";
+                if (cell === 2) className += " pellet";
 
-              if (player.row === i && player.col === j) {
-                className += ` pacman pacman-${player.direction}`;
-              }
+                if (player.row === i && player.col === j) {
+                  className += ` pacman pacman-${player.direction}`;
+                }
 
-              return (
-                <div key={`${i}-${j}`} className={className}>
-                  {ghostOnCell && !(player.row === i && player.col === j) ? (
-                    <span className={`ghost ghost-${ghostOnCell.behavior}`} />
-                  ) : null}
-                </div>
-              );
-            }),
-          )}
+                return (
+                  <div key={`${i}-${j}`} className={className}>
+                    {ghostOnCell && !(player.row === i && player.col === j) ? (
+                      <span className={`ghost ghost-${ghostOnCell.behavior}`} />
+                    ) : null}
+                  </div>
+                );
+              }),
+            )}
           </div>
         </div>
 
