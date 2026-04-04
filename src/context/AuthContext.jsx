@@ -203,6 +203,7 @@ export function AuthProvider({ children }) {
       .order("xp", { ascending: false });
 
     if (error) throw new Error(error.message);
+
     return data;
   };
 

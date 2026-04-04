@@ -31,7 +31,6 @@ export default function Profile() {
     async function fetchUsers() {
       try {
         const data = await fetchLeaderboard();
-        console.log(data);
         setUsers(data || []);
       } catch (err) {
         console.error(err);
