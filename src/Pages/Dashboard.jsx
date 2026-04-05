@@ -38,13 +38,13 @@ export default function Dashboard() {
     {
       title: "Brick Breaker",
       path: "/brick-breaker",
-      thumb: "BB",
+      image: "/images/brickbreaker.png",
       description: "Paddle • Physics • Arcade",
     },
     {
       title: "Pong",
       path: "/pong",
-      thumb: "PG",
+      image: "/images/pong.png",
       description: "Arcade • Duel • Precision",
     },
     {
@@ -70,6 +70,18 @@ export default function Dashboard() {
       path: "/screamrunner",
       thumb: "SR",
       description: "Voice • Timing • Fun",
+    },
+    {
+      title: "Fruit Ninja",
+      path: "/fruitninja",
+      thumb: "FN",
+      description: "Splash • Quick • Timing",
+    },
+    {
+      title: "Puzzle",
+      path: "/puzzle",
+      thumb: "PZ",
+      description: "Puzzle • Timing • Fun",
     },
   ];
 
