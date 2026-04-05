@@ -179,7 +179,7 @@
 }
 
 .screen-text {
-  font-size: 9px;
+  font-size: 20px;
   color: var(--screen-green);
   text-shadow: 0 0 6px var(--screen-green);
   line-height: 1.8;

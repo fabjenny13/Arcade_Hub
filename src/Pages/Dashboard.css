@@ -424,6 +424,53 @@
   transform: translateY(-1px);
 }
 
+/* Left arrow */
+.arcade-toggle {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #111;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 0 8px 8px 0;
+  z-index: 1000;
+}
+
+/* Dark overlay */
+.arcade-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup box */
+.arcade-popup {
+  background: #0b0f1a;
+  padding: 20px;
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
 @media (max-width: 760px) {
   .top-actions {
     right: 14px;

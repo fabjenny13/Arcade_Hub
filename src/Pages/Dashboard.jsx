@@ -2,11 +2,14 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ArcadeMachine from "../Components/ArcadeMachine";
+import { useState } from "react";
 import "./Dashboard.css";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [openArcade, setOpenArcade] = useState(false);
+
   const games = [
     {
       title: "Minesweeper",
@@ -79,6 +82,23 @@ export default function Dashboard() {
         <span className="float-shape panel panel-b" />
       </div>
 
+      {/* LEFT ARROW */}
+      <div className="arcade-toggle" onClick={() => setOpenArcade(true)}>
+        ▶
+      </div>
+
+      {/* POPUP */}
+      {openArcade && (
+        <div className="arcade-overlay">
+          <div className="arcade-popup">
+            <button className="close-btn" onClick={() => setOpenArcade(false)}>
+              ✖
+            </button>
+
+            <ArcadeMachine games={games} />
+          </div>
+        </div>
+      )}
       {/* ── Top actions ── */}
       <div className="top-actions">
         <button
