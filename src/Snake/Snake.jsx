@@ -4,6 +4,7 @@ import gameOverSoundFile from "../assets/gameover.mp3";
 import Navbar from "../Components/Navbar.jsx";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
+import { useAuth } from "../Context/AuthContext.jsx";
 
 const GRID_SIZE = 20;
 
@@ -27,6 +28,8 @@ export default function Snake() {
 
   const eatSound = useMemo(() => new Audio(eatSoundFile), []);
   const gameOverSound = useMemo(() => new Audio(gameOverSoundFile), []);
+
+  const { user, reportScore } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => setBooting(false), 650);
@@ -71,6 +74,12 @@ export default function Snake() {
           // Eat food
           if (newHead.x === food.x && newHead.y === food.y) {
             if (soundOn) eatSound.play();
+
+            if (user) {
+              reportScore("snake", 10).catch(() => {
+                console.error;
+              });
+            }
             setFood({
               x: Math.floor(Math.random() * GRID_SIZE),
               y: Math.floor(Math.random() * GRID_SIZE),
@@ -95,7 +104,17 @@ export default function Snake() {
     );
 
     return () => clearInterval(interval);
-  }, [booting, direction, food, gameOver, paused, snake.length, soundOn, eatSound, gameOverSound]);
+  }, [
+    booting,
+    direction,
+    food,
+    gameOver,
+    paused,
+    snake.length,
+    soundOn,
+    eatSound,
+    gameOverSound,
+  ]);
 
   // Controls
   useEffect(() => {

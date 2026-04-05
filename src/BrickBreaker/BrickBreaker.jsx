@@ -3,6 +3,7 @@ import Navbar from "../Components/Navbar";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
 import "./BrickBreaker.css";
+import { useAuth } from "../Context/AuthContext";
 
 const CANVAS_WIDTH = 820;
 const CANVAS_HEIGHT = 480;
@@ -99,9 +100,15 @@ export default function BrickBreaker() {
   const pointerXRef = useRef(null);
   const stateRef = useRef(createGameState());
   const previousTimeRef = useRef(0);
+  const { user, reportScore } = useAuth();
 
   const [booting, setBooting] = useState(true);
-  const [ui, setUi] = useState({ score: 0, lives: 3, level: 1, status: "playing" });
+  const [ui, setUi] = useState({
+    score: 0,
+    lives: 3,
+    level: 1,
+    status: "playing",
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -173,7 +180,8 @@ export default function BrickBreaker() {
       previousTimeRef.current = time;
 
       if (state.status === "playing") {
-        const direction = Number(keysRef.current.right) - Number(keysRef.current.left);
+        const direction =
+          Number(keysRef.current.right) - Number(keysRef.current.left);
 
         if (pointerXRef.current !== null) {
           const target = pointerXRef.current - state.paddle.w / 2;
@@ -183,7 +191,10 @@ export default function BrickBreaker() {
           state.paddle.x += direction * state.paddle.speed * dt;
         }
 
-        state.paddle.x = Math.max(0, Math.min(CANVAS_WIDTH - state.paddle.w, state.paddle.x));
+        state.paddle.x = Math.max(
+          0,
+          Math.min(CANVAS_WIDTH - state.paddle.w, state.paddle.x),
+        );
 
         const previousY = state.ball.y;
 
@@ -215,9 +226,14 @@ export default function BrickBreaker() {
           const hitOffset =
             (state.ball.x - (state.paddle.x + state.paddle.w / 2)) /
             (state.paddle.w / 2);
-          const speed = Math.min(10.5, Math.hypot(state.ball.vx, state.ball.vy) + 0.18);
+          const speed = Math.min(
+            10.5,
+            Math.hypot(state.ball.vx, state.ball.vy) + 0.18,
+          );
           state.ball.vx = speed * hitOffset;
-          state.ball.vy = -Math.sqrt(Math.max(6, speed * speed - state.ball.vx * state.ball.vx));
+          state.ball.vy = -Math.sqrt(
+            Math.max(6, speed * speed - state.ball.vx * state.ball.vx),
+          );
           state.ball.y = state.paddle.y - state.ball.r - 1;
         }
 
@@ -250,6 +266,11 @@ export default function BrickBreaker() {
           brick.hp -= 1;
           if (brick.hp <= 0) {
             state.score += 10 * state.level;
+            if (user) {
+              reportScore("brickbreaker", 10 * state.level).catch(() => {
+                console.error;
+              });
+            }
             scored = true;
             activeBricks -= 1;
           }
@@ -284,7 +305,11 @@ export default function BrickBreaker() {
           CANVAS_HEIGHT / 2 - 4,
         );
         ctx.font = "500 16px JetBrains Mono";
-        ctx.fillText("Press Restart to play again", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 28);
+        ctx.fillText(
+          "Press Restart to play again",
+          CANVAS_WIDTH / 2,
+          CANVAS_HEIGHT / 2 + 28,
+        );
       }
 
       rafRef.current = requestAnimationFrame(frame);
@@ -344,7 +369,10 @@ export default function BrickBreaker() {
     return (
       <div className="brick-page">
         <Navbar />
-        <GameBoot title="Brick Breaker" subtitle="Loading paddle physics and brick grid..." />
+        <GameBoot
+          title="Brick Breaker"
+          subtitle="Loading paddle physics and brick grid..."
+        />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../Context/AuthContext";
 import Navbar from "../Components/Navbar";
 import GameBoot from "../Components/GameBoot";
 import "../Components/GameBoot.css";
@@ -83,8 +84,15 @@ export default function Pong() {
   const stateRef = useRef(createState());
   const previousTimeRef = useRef(0);
 
+  const { user, reportScore } = useAuth();
+
   const [booting, setBooting] = useState(true);
-  const [ui, setUi] = useState({ playerScore: 0, aiScore: 0, status: "playing", winner: "" });
+  const [ui, setUi] = useState({
+    playerScore: 0,
+    aiScore: 0,
+    status: "playing",
+    winner: "",
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => setBooting(false), 650);
@@ -121,23 +129,34 @@ export default function Pong() {
       previousTimeRef.current = time;
 
       if (state.status === "playing") {
-        const direction = Number(keysRef.current.down) - Number(keysRef.current.up);
+        const direction =
+          Number(keysRef.current.down) - Number(keysRef.current.up);
         state.player.y += direction * state.player.speed * dt;
 
-        state.player.y = Math.max(0, Math.min(HEIGHT - state.player.h, state.player.y));
+        state.player.y = Math.max(
+          0,
+          Math.min(HEIGHT - state.player.h, state.player.y),
+        );
 
         const aiTarget = state.ball.y - state.ai.h / 2;
         const aiDelta = aiTarget - state.ai.y;
-        const aiStep = Math.sign(aiDelta) * Math.min(Math.abs(aiDelta), state.ai.speed * dt);
+        const aiStep =
+          Math.sign(aiDelta) * Math.min(Math.abs(aiDelta), state.ai.speed * dt);
         state.ai.y += aiStep;
         state.ai.y = Math.max(0, Math.min(HEIGHT - state.ai.h, state.ai.y));
 
         state.ball.x += state.ball.vx * dt;
         state.ball.y += state.ball.vy * dt;
 
-        if (state.ball.y - state.ball.r <= 0 || state.ball.y + state.ball.r >= HEIGHT) {
+        if (
+          state.ball.y - state.ball.r <= 0 ||
+          state.ball.y + state.ball.r >= HEIGHT
+        ) {
           state.ball.vy *= -1;
-          state.ball.y = Math.max(state.ball.r, Math.min(HEIGHT - state.ball.r, state.ball.y));
+          state.ball.y = Math.max(
+            state.ball.r,
+            Math.min(HEIGHT - state.ball.r, state.ball.y),
+          );
         }
 
         const paddles = [state.player, state.ai];
@@ -150,19 +169,27 @@ export default function Pong() {
 
           if (!hit) return;
 
-          const headingToPaddle = index === 0 ? state.ball.vx < 0 : state.ball.vx > 0;
+          const headingToPaddle =
+            index === 0 ? state.ball.vx < 0 : state.ball.vx > 0;
           if (!headingToPaddle) return;
 
           const relative =
-            (state.ball.y - (paddle.y + paddle.h / 2)) /
-            (paddle.h / 2);
-          const speed = Math.min(11.5, Math.hypot(state.ball.vx, state.ball.vy) * 1.06);
+            (state.ball.y - (paddle.y + paddle.h / 2)) / (paddle.h / 2);
+          const speed = Math.min(
+            11.5,
+            Math.hypot(state.ball.vx, state.ball.vy) * 1.06,
+          );
 
           state.ball.vx = (index === 0 ? 1 : -1) * Math.max(4.3, speed * 0.9);
           state.ball.vy = speed * relative;
 
           if (index === 0) {
             state.ball.x = paddle.x + paddle.w + state.ball.r + 1;
+            if (user) {
+              reportScore("pong", 10).catch(() => {
+                console.error;
+              });
+            }
           } else {
             state.ball.x = paddle.x - state.ball.r - 1;
           }
@@ -170,12 +197,18 @@ export default function Pong() {
 
         if (state.ball.x < -20) {
           state.aiScore += 1;
+
           resetBall(state, true);
           endIfNeeded();
         }
 
         if (state.ball.x > WIDTH + 20) {
           state.playerScore += 1;
+          if (user) {
+            reportScore("pong", 50).catch(() => {
+              console.error;
+            });
+          }
           resetBall(state, false);
           endIfNeeded();
         }
@@ -191,7 +224,11 @@ export default function Pong() {
         ctx.font = "700 30px Rajdhani";
         ctx.fillText(`${state.winner} Wins`, WIDTH / 2, HEIGHT / 2 - 4);
         ctx.font = "500 16px JetBrains Mono";
-        ctx.fillText("Press Restart for a new match", WIDTH / 2, HEIGHT / 2 + 28);
+        ctx.fillText(
+          "Press Restart for a new match",
+          WIDTH / 2,
+          HEIGHT / 2 + 28,
+        );
       }
 
       rafRef.current = requestAnimationFrame(frame);
@@ -208,7 +245,8 @@ export default function Pong() {
     const onKeyUp = (event) => {
       const key = event.key.toLowerCase();
       if (event.key === "ArrowUp" || key === "w") keysRef.current.up = false;
-      if (event.key === "ArrowDown" || key === "s") keysRef.current.down = false;
+      if (event.key === "ArrowDown" || key === "s")
+        keysRef.current.down = false;
     };
 
     const onPointerMove = (event) => {
@@ -243,7 +281,10 @@ export default function Pong() {
     return (
       <div className="pong-page">
         <Navbar />
-        <GameBoot title="Pong" subtitle="Loading AI opponent and ball physics..." />
+        <GameBoot
+          title="Pong"
+          subtitle="Loading AI opponent and ball physics..."
+        />
       </div>
     );
   }
@@ -261,7 +302,12 @@ export default function Pong() {
           </div>
         </header>
 
-        <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} className="pong-canvas" />
+        <canvas
+          ref={canvasRef}
+          width={WIDTH}
+          height={HEIGHT}
+          className="pong-canvas"
+        />
 
         <div className="pong-actions">
           <button onClick={restart}>Restart</button>

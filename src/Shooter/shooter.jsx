@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./shooter.css";
 import Navbar from "../Components/Navbar";
 import GameBoot from "../Components/GameBoot";
+import { useAuth } from "../Context/AuthContext";
 
 export default function Shooter() {
   const gameWidth = 600;
@@ -17,6 +18,8 @@ export default function Shooter() {
   const lastShotRef = useRef(0);
   const bulletsRef = useRef([]);
   const enemiesRef = useRef([]);
+
+  const { user, reportScore } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => setBooting(false), 650);
@@ -108,6 +111,14 @@ export default function Shooter() {
           return true;
         });
         if (!hit) remainingEnemies.push(e);
+
+        if (hit) {
+          if (user) {
+            reportScore("shooter", 10).catch(() => {
+              console.error;
+            });
+          }
+        }
       }
       enemiesRef.current = remainingEnemies;
 
