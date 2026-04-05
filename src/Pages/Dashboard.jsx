@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ArcadeMachine from "../Components/ArcadeMachine";
 import "./Dashboard.css";
 
 export default function Dashboard() {
