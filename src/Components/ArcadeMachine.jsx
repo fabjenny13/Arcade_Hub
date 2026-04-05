@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./ArcadeMachine.css";
+import { useNavigate } from "react-router-dom";
 
 const DEFAULT_GAMES = [
   { title: "GALAGA", genre: "SHOOTER" },
@@ -23,9 +24,11 @@ export default function ArcadeMachine({ games = DEFAULT_GAMES }) {
   const [hint, setHint] = useState("TAP TO SPIN");
   const [spinning, setSpinning] = useState(false);
   const [glowing, setGlowing] = useState(false);
+  const [path, setPath] = useState("");
+  const navigate = useNavigate();
 
   const getRandomGame = () => games[Math.floor(Math.random() * games.length)];
-  const getRandomScore = () => Math.floor(Math.random() * 99900) + 100;
+  const getRandomScore = () => Math.floor(Math.random() * 500) + 10;
 
   const spinMachine = () => {
     if (isSpinning) return;
@@ -61,14 +64,21 @@ export default function ArcadeMachine({ games = DEFAULT_GAMES }) {
         const score = getRandomScore();
 
         setScreenText(final.title);
-        setScreenLabel(`// ${final.genre} //`);
-        setScreenScore(`SCORE: ${score.toLocaleString()}`);
+        setScreenLabel("// RESULT //");
+        setScreenScore(`GOAL: ${score.toLocaleString()} PTS`);
         setHint(newCredits > 0 ? "TAP TO SPIN" : "NO CREDITS");
         setSpinning(false);
         setGlowing(false);
         setIsSpinning(false);
+        setPath(final.path);
       }
     }, 90);
+  };
+
+  const goToGame = () => {
+    if (path != "") {
+      navigate(path);
+    }
   };
 
   const resetMachine = () => {
@@ -141,8 +151,8 @@ export default function ArcadeMachine({ games = DEFAULT_GAMES }) {
         </div>
 
         <div className="start-row">
-          <button className="btn-start" onClick={spinMachine}>
-            1 PLAYER
+          <button className="btn-start" onClick={goToGame}>
+            TAKE ME
           </button>
           <button className="btn-start spin-btn" onClick={spinMachine}>
             ★ SPIN ★
