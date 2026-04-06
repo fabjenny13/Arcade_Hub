@@ -17,6 +17,7 @@ export default function Friends() {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,7 +25,9 @@ export default function Friends() {
     if (!user) return;
 
     const loadFriends = async () => {
+      setLoading(true);
       const data = await fetchFriends();
+      setLoading(false);
       setFriends(data);
     };
 
@@ -98,6 +101,8 @@ export default function Friends() {
 
           {message && <p className="info">{message}</p>}
 
+          {loading && <p className="info">Loading...</p>}
+
           <div className="users-list">
             {users.map((u) => (
               <div key={u.username} className="user-row">
@@ -117,6 +122,8 @@ export default function Friends() {
           </div>
 
           <h2>Your Friends</h2>
+          {loading && <p className="info">Loading...</p>}
+
           <ul className="friends-list">
             {friends.map((friend) => (
               <li key={friend.id}>
